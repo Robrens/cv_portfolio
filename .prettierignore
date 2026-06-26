@@ -1,0 +1,17 @@
+node_modules
+vendor
+
+public/build
+public/hot
+storage
+bootstrap/cache
+
+.env
+.env.*
+!.env.example
+
+composer.lock
+yarn.lock
+package-lock.json
+
+*.log

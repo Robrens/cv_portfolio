@@ -1,0 +1,15 @@
+/* Tailwind v4 */
+@import "tailwindcss";
+
+/* Sources Blade/Laravel */
+@source "../../resources/views/**/*.blade.php";
+@source "../../resources/js/**/*.js";
+@source "../../app/**/*.php";
+
+/* Tokens */
+@import "abstracts/tokens";
+
+/* Base */
+@import "general/layout";
+@import "general/typo";
+@import "general/utilities";
