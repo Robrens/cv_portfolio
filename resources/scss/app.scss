@@ -1,18 +1,18 @@
 /* Tailwind v4 */
-@import "tailwindcss";
+@use "tailwindcss";
 
 /* Tokens */
-@import "abstracts/tokens";
+@use "abstracts/tokens";
 
 /* Base */
-@import "general/base";
-@import "general/layout";
-@import "general/typo";
-@import "general/motion";
-@import "general/utilities";
+@use "general/base";
+@use "general/layout";
+@use "general/motion";
+@use "general/typo";
 
 /* Components utiles */
-@import "components/buttons";
-@import "components/cards";
-@import "components/badges";
-@import "components/navigation";
+@use "components/badges";
+@use "components/buttons";
+@use "components/cards";
+@use "components/hero";
+@use "components/navigation";
