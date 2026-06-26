@@ -1,15 +1,18 @@
 /* Tailwind v4 */
 @import "tailwindcss";
 
-/* Sources Blade/Laravel */
-@source "../../resources/views/**/*.blade.php";
-@source "../../resources/js/**/*.js";
-@source "../../app/**/*.php";
-
 /* Tokens */
 @import "abstracts/tokens";
 
 /* Base */
+@import "general/base";
 @import "general/layout";
 @import "general/typo";
+@import "general/motion";
 @import "general/utilities";
+
+/* Components utiles */
+@import "components/buttons";
+@import "components/cards";
+@import "components/badges";
+@import "components/navigation";

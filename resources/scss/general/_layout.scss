@@ -1,17 +1,19 @@
 .container {
-  width: min(100% - 2rem, 1200px);
+  width: min(100% - 2rem, var(--container-main));
   margin-inline: auto;
 }
 
 .container-sm {
-  width: min(100% - 2rem, 768px);
+  width: min(100% - 2rem, var(--container-reading));
   margin-inline: auto;
 }
 
 .section {
   padding-block: 4rem;
+}
 
-  @media (min-width: 768px) {
+@media (min-width: 768px) {
+  .section {
     padding-block: 6rem;
   }
 }

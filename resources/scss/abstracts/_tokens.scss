@@ -1,30 +1,29 @@
 @theme {
-  /* Couleurs principales */
-  --color-primary: #1e293b;
-  --color-secondary: #334155;
-
-  /* Accents */
-  --color-accent: #ef4444;
-  --color-accent-hover: #dc2626;
-  --color-link: #2563eb;
+  /* Couleurs structurelles */
+  --color-brand-primary: #1e293b;
+  --color-brand-secondary: #334155;
+  --color-brand-accent: #ef4444;
+  --color-brand-accent-hover: #dc2626;
+  --color-brand-link: #2563eb;
 
   /* Surfaces */
-  --color-page: #f8fafc;
-  --color-card: #ffffff;
-  --color-muted: #f1f5f9;
+  --color-surface-page: #f8fafc;
+  --color-surface-card: #ffffff;
+  --color-surface-muted: #f1f5f9;
 
-  /* Texte */
-  --color-text-main: #0f172a;
-  --color-text-muted: #475569;
+  /* Textes */
+  --color-content-primary: #0f172a;
+  --color-content-secondary: #475569;
+  --color-content-inverted: #ffffff;
 
   /* Bordures */
   --color-border-soft: #cbd5e1;
 
   /* États */
-  --color-success: #16a34a;
-  --color-warning: #f59e0b;
-  --color-error: #dc2626;
-  --color-info: #2563eb;
+  --color-state-success: #16a34a;
+  --color-state-warning: #f59e0b;
+  --color-state-error: #dc2626;
+  --color-state-info: #2563eb;
 
   /* Badges */
   --color-skill-dev-bg: #dbeafe;
@@ -37,21 +36,21 @@
   --color-skill-system-text: #166534;
 
   /* Typographies */
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, sfmono-regular, monospace;
 
   /* Radius */
   --radius-button: 10px;
   --radius-card: 16px;
 
   /* Ombres */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.08);
+  --shadow-card-hover: 0 8px 24px rgb(0 0 0 / 0.08);
 
   /* Animations */
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Container */
+  /* Largeurs */
   --container-main: 1200px;
   --container-reading: 768px;
 }

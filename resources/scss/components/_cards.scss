@@ -1,0 +1,25 @@
+.card {
+  border: 1px solid rgb(203 213 225);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-card);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 200ms var(--ease-soft),
+    box-shadow 200ms var(--ease-soft),
+    border-color 200ms var(--ease-soft);
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: rgb(148 163 184);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+}
