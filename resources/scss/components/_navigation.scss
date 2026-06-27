@@ -1,15 +1,29 @@
+.header {
+  background: var(--color-header-bg);
+  border-bottom: 1px solid var(--color-header-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  padding: 2rem 0;
+}
+
 .nav-link {
   position: relative;
-  color: var(--color-content-secondary);
+  display: inline-flex;
+  color: var(--color-muted);
   font-size: 0.875rem;
   font-weight: 500;
+  padding: 0.5rem 1rem;
   transition: color 150ms var(--ease-soft);
 }
 
 .nav-link:hover,
 .nav-link:focus-visible,
 .nav-link.is-active {
-  color: var(--color-content-primary);
+  color: var(--color-content-inverted);
+  background-color: var(--color-brand-primary);
+  border-radius: 10px;
 }
 
 .nav-link::after {
