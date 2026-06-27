@@ -11,14 +11,28 @@
   --color-surface-card: #ffffff;
   --color-surface-muted: #f1f5f9;
 
+  /* Hero */
+  --color-hero-bg: #020617;
+  --color-hero-panel: #0f172a;
+  --color-hero-glow: #2563eb;
+
+  /* Header */
+  --color-header-bg: #040819;
+  --color-header-border: rgb(255 255 255 / 0.08);
+
   /* Textes */
   --color-content-primary: #2563eb;
   --color-content-secondary: #475569;
   --color-content-third: #ef4444;
   --color-content-inverted: #cbd5e1;
+  --color-heading: #0f172a;
+  --color-body: #334155;
+  --color-muted: #64748b;
+  --color-invert: #ffffff;
 
   /* Bordures */
-  --color-border-soft: #cbd5e1;
+  --color-border: #cbd5e1;
+  --color-border-muted: #e2e8f0;
 
   /* États */
   --color-state-success: #16a34a;
