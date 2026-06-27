@@ -1,4 +1,4 @@
-@theme {
+@theme static {
   /* Couleurs structurelles */
   --color-brand-primary: #1e293b;
   --color-brand-secondary: #334155;
@@ -12,9 +12,10 @@
   --color-surface-muted: #f1f5f9;
 
   /* Textes */
-  --color-content-primary: #0f172a;
+  --color-content-primary: #2563eb;
   --color-content-secondary: #475569;
-  --color-content-inverted: #ffffff;
+  --color-content-third: #ef4444;
+  --color-content-inverted: #cbd5e1;
 
   /* Bordures */
   --color-border-soft: #cbd5e1;
@@ -36,8 +37,8 @@
   --color-skill-system-text: #166534;
 
   /* Typographies */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, sfmono-regular, monospace;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, sfmono-regular, monospace;
 
   /* Radius */
   --radius-button: 10px;

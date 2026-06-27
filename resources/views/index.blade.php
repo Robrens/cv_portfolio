@@ -9,9 +9,10 @@
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite(['resources/scss/app.scss', 'resources/js/app.ts']) @endif
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.ts']) @endif
   </head>
   <body>
+    <x-hero />
     @if (Route::has('login'))
     <div class="h-14.5 hidden lg:block"></div>
     @endif
