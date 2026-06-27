@@ -12,6 +12,7 @@
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.ts']) @endif
   </head>
   <body>
+    <x-header />
     <x-hero />
     @if (Route::has('login'))
     <div class="h-14.5 hidden lg:block"></div>
