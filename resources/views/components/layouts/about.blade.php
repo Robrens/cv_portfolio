@@ -1,4 +1,4 @@
-<section class="section">
+<section class="section about">
   <div class="site-container">
     <div>
       <h2 class="text-content-third uppercase subtitle font-semibold">
