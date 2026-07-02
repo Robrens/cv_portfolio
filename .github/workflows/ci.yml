@@ -20,11 +20,6 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }}"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     env:
       DB_CONNECTION: ${{ vars.DB_CONNECTION }}
@@ -53,6 +48,14 @@ jobs:
 
       - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_DATABASE"; do
+            sleep 1
+          done
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Install JavaScript dependencies
         run: yarn install --frozen-lockfile
