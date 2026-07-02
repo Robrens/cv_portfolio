@@ -1,4 +1,4 @@
-<section class="section hero-bg text-invert">
+<section class="section hero-bg">
   <div class="site-container">
     <div class="w-full grid gap-10 lg:grid-cols-[2.1fr_0.9fr] lg:items-center">
       <div>
@@ -16,6 +16,9 @@
           <a href="/cv.pdf" class="btn btn-primary">Télécharger mon CV</a>
           <a href="#parcours" class="btn btn-secondary">Comprendre mon parcours</a>
         </div>
+      </div>
+      <div>
+        <img src="https://picsum.photos/800/600" alt="placeholder">
       </div>
     </div>
   </div>
