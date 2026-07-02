@@ -8,6 +8,13 @@
     transform 200ms var(--ease-soft),
     box-shadow 200ms var(--ease-soft),
     border-color 200ms var(--ease-soft);
+
+  .card-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    color: var(--color-brand-accent);
+  }
 }
 
 .card:hover,
