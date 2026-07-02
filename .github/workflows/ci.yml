@@ -10,6 +10,8 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'master' && 'Development' || 'Development' }}
+    timeout-minutes: 10
 
     services:
       postgres:
@@ -45,6 +47,7 @@ jobs:
         with:
           node-version: '24.18'
           cache: 'yarn'
+
       - name: Prepare Laravel directories
         run: |
           cp .env.example .env
@@ -58,9 +61,18 @@ jobs:
 
       - name: Wait for PostgreSQL
         run: |
-          until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_DATABASE"; do
-            sleep 1
+          for i in {1..30}; do
+            if pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_DATABASE"; then
+              echo "PostgreSQL is ready"
+              exit 0
+            fi
+
+            echo "Waiting for PostgreSQL... attempt $i/30"
+            sleep 2
           done
+
+          echo "PostgreSQL did not become ready in time"
+          exit 1
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
 
