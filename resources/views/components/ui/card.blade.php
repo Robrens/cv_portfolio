@@ -13,8 +13,8 @@
   @endif
 
   <div class="mt-4 gap-y-2">
-    <h3 class="eyebrow">{{ $title }}</h3>
-    <p>{{ $subtitle }}</p>
+    <h3 class="section-title">{{ $title }}</h3>
+    <p class="font-semibold">{{ $subtitle }}</p>
   </div>
 
   <div class="mt-4">
