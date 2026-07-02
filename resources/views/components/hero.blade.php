@@ -1,7 +1,7 @@
 <section class="section hero-bg">
   <div class="site-container">
     <div class="w-full grid gap-10 lg:grid-cols-[2.1fr_0.9fr] lg:items-center">
-      <div>
+      <div class="order-1">
         <h2 class="text-state-info uppercase">
           Développeur Applicatif & Systèmes
         </h2>
@@ -29,12 +29,12 @@
         </div>
       </div>
 
-      <div>
+      <div class="order-3 lg:order-2">
         <img src="https://picsum.photos/800/600" alt="placeholder"
           class="aspect-4/3 w-full rounded-card object-cover shadow-card">
       </div>
 
-      <ul class="hero-info-list">
+      <ul class="hero-info-list order-2 lg:order-3">
         <li class="hero-info-item">
           <x-heroicon-o-map-pin class="hero-info-icon" />
           <div class="hero-info-content">
