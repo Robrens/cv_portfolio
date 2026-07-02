@@ -12,4 +12,55 @@
       #0f172a 45%,
       #020617 100%
     );
+
+  .hero-info-list {
+    display: grid;
+    grid-column: 1 / -1;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .hero-info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 1rem;
+    background: rgba(15, 23, 42, 0.32);
+  }
+
+  .hero-info-content {
+    flex: 1;
+
+    .hero-info-title {
+      color: var(--color-content-inverted);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .hero-info-text {
+      margin-top: 0.35rem;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  }
+
+  .hero-info-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    color: var(--color-brand-accent);
+  }
+
 }
