@@ -1,8 +1,5 @@
-html {
-  background: var(--color-surface-page);
-}
-
 body {
+  background-color: var(--color-surface-page);
   min-height: 100vh;
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
