@@ -59,7 +59,7 @@ du travail.',
     </div>
 
     <div class="mt-10 flex justify-center">
-      <a href="#parcours-complet" class="btn-secondary">
+      <a href="#parcours-complet" class="btn btn-quaternary">
         Voir tout le parcours
       </a>
     </div>
