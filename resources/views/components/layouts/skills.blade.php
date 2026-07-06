@@ -140,10 +140,10 @@
     </div>
 
     <div class="mt-6 text-center">
-      <a href="#career"
-        class="inline-flex items-center justify-center rounded-button border border-white/15 px-5 py-3 text-sm font-semibold text-slate-200 transition-colors duration-150 hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-accent">
+      <button
+        class="btn btn-tertiary">
         Voir toutes les compétences
-      </a>
+      </button>
     </div>
   </div>
 </section>
