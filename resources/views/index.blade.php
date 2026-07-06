@@ -15,5 +15,6 @@
     <x-layouts.header />
     <x-layouts.hero />
     <x-layouts.about />
+    <x-layouts.skills />
   </body>
 </html>
