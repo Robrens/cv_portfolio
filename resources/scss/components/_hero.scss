@@ -63,32 +63,4 @@
     color: var(--color-brand-accent);
   }
 
-  .hero-portrait {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-
-    img {
-      @media (min-width: 768px) and (max-width: 1023px) {
-        max-width: 18rem;
-      }
-
-      @media (min-width: 1024px) {
-        max-width: none;
-      }
-      -webkit-mask-image: linear-gradient(
-        to bottom,
-        black 0%,
-        black 60%,
-        transparent 100%
-      );
-
-      mask-image: linear-gradient(
-        to bottom,
-        black 0%,
-        black 60%,
-        transparent 100%
-      );
-    }
-  }
 }

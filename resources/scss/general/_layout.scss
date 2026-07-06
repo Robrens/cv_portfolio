@@ -28,20 +28,10 @@
 
 .section {
   padding-block: 4rem;
-  @media (min-width: 768px) {
-    padding-block: 6rem;
-  }
 }
 
-
-.section-hero {
-  padding-block: 4rem;
-
-  @media (min-width: 768px) {
-    padding-top: 6rem;
-    padding-bottom: 2rem;
-  }
-  @media (min-width: 1024px) {
+@media (min-width: 768px) {
+  .section {
     padding-block: 6rem;
   }
 }
