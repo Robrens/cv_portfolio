@@ -17,5 +17,6 @@
     <x-layouts.about />
     <x-layouts.skills />
     <x-layouts.career />
+    <x-layouts.approach />
   </body>
 </html>
