@@ -99,47 +99,47 @@
       </div>
     </div>
     <div>
-      <ul class="flex flex-row gap-8 w-full">
-        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">
+      <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8 w-full">
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8">
           <div class="flex flex-row items-center justify-start gap-2">
             <x-heroicon-o-musical-note class="size-12 text-brand-accent" />
             <h3 class="text-md font-semibold text-white mt-2">Musique</h3>
           </div>
           <div>
-            <p class="text-sm text-muted lg:mt-3">
+            <p class="text-sm text-muted mt-1 md:mt-2 lg:mt-3">
               Metal, concerts, énergie live
             </p>
           </div>
         </li>
-        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8">
           <div class="flex flex-row items-center justify-start gap-2">
             <x-heroicon-o-musical-note class="size-12 text-brand-accent" />
             <h3 class="text-md font-semibold text-white mt-2">Musique</h3>
           </div>
           <div>
-            <p class="text-sm text-muted lg:mt-3">
+            <p class="text-sm text-muted mt-1 md:mt-2 lg:mt-3">
               Metal, concerts, énergie live
             </p>
           </div>
         </li>
-        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8">
           <div class="flex flex-row items-center justify-start gap-2">
             <x-heroicon-o-musical-note class="size-12 text-brand-accent" />
             <h3 class="text-md font-semibold text-white mt-2">Musique</h3>
           </div>
           <div>
-            <p class="text-sm text-muted lg:mt-3">
+            <p class="text-sm text-muted mt-1 md:mt-2 lg:mt-3">
               Metal, concerts, énergie live
             </p>
           </div>
         </li>
-        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8">
           <div class="flex flex-row items-center justify-start gap-2">
             <x-heroicon-o-musical-note class="size-12 text-brand-accent" />
             <h3 class="text-md font-semibold text-white mt-2">Musique</h3>
           </div>
           <div>
-            <p class="text-sm text-muted lg:mt-3">
+            <p class="text-sm text-muted mt-1 md:mt-2 lg:mt-3">
               Metal, concerts, énergie live
             </p>
           </div>
