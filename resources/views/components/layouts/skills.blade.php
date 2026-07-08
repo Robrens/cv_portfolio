@@ -1,5 +1,5 @@
-<section id="skills" class="section skills rounded-card bg-brand-primary" x-data="{ activeTab: 'development' }">
-  <div class="site-container">
+<section id="skills" class="section skills" x-data="{ activeTab: 'development' }">
+  <div class="site-container rounded-card bg-brand-primary">
     <div>
       <h2 class="subtitle font-semibold uppercase text-brand-accent">
         Compétences techniques
