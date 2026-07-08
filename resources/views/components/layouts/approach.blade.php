@@ -1,5 +1,5 @@
-<section class="section approach rounded-card bg-brand-primary">
-  <div class="site-container">
+<section class="section approach">
+  <div class="site-container rounded-card bg-brand-primary">
     <div class="mb-5 md:mb-8 lg:mb-12">
       <h2 class="text-content-third uppercase subtitle font-semibold">
         Démarche

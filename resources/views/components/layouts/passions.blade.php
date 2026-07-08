@@ -1,6 +1,6 @@
-<section class="section passions rounded-card bg-brand-primary mt-10" id="passions">
-  <div class="site-container">
-    <div class="flex flex-col gap-8 lg:flex-row lg:justify-between">
+<section class="section passions mt-10" id="passions">
+  <div class="site-container rounded-card bg-brand-primary">
+    <div class="lg:flex gap-8 lg:flex-row lg:justify-between">
       <div class="mb-5 lg:mb-12 lg:w-[45%]">
         <h2 class="text-content-third uppercase subtitle font-semibold">
           Passions & moi
@@ -29,10 +29,9 @@
 
       <div class="flex flex-col items-center justify-center lg:w-[45%]">
         <div x-data="spotifyEmbed({
-    url: 'https://open.spotify.com/playlist/{{ config('services.spotify.playlist_id') }}',
-    externalUrl: 'https://open.spotify.com/playlist/{{ config('services.spotify.playlist_id') }}',
-    height: 352
-  })" class="w-full rounded-card border border-white/10 bg-white/3 p-6 md:p-8">
+            url: 'https://open.spotify.com/playlist/{{ config('services.spotify.playlist_id') }}',
+            externalUrl: 'https://open.spotify.com/playlist/{{ config('services.spotify.playlist_id') }}',
+            height: 352})" class="w-full rounded-card border border-white/10 bg-white/3 p-6 md:p-8 mb-10">
           <div x-show="!consentGiven" x-cloak>
             <div class="flex items-start gap-4">
               <div
@@ -98,6 +97,14 @@
           </div>
         </div>
       </div>
+    </div>
+    <div>
+      <ul class="flex flex-row gap-8 w-full">
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">Metal</li>
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">Metal</li>
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">Metal</li>
+        <li class="rounded-card border border-white/10 bg-white/3 p-6 md:p-8 lg:w-[24%]">Metal</li>
+      </ul>
     </div>
   </div>
 </section>
