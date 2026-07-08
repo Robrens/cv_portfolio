@@ -1,4 +1,4 @@
-<section class="section-hero hero-bg">
+<section class="section-hero hero-bg rounded-b-button">
   <div class="site-container">
     <div class="w-full grid gap-10 lg:grid-cols-[2.1fr_0.9fr] lg:items-center">
       <div class="order-1">
