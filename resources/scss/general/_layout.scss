@@ -45,3 +45,17 @@
     padding-block: 6rem;
   }
 }
+
+.site-header-container {
+  width: 100%;
+  max-width: var(--container-main);
+  margin-inline: auto;
+  padding: 1rem;
+  @media (min-width: 640px) {
+    padding: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+}

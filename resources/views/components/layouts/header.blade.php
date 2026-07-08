@@ -1,6 +1,6 @@
 <header x-data="{ open: false }" x-effect="document.body.classList.toggle('overflow-hidden', open)"
   @keydown.escape.window="open = false" class="header">
-  <div class="site-container">
+  <div class="site-header-container">
     <div class="flex items-center justify-between lg:justify-start lg:gap-10">
       <div class="lg:w-[20%]">
         <a href="/" class="title text-brand-accent">JB</a>
