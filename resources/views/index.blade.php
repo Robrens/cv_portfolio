@@ -19,5 +19,7 @@
     <x-layouts.career />
     <x-layouts.approach />
     <x-layouts.passions />
+    <x-layouts.contact />
+    <x-layouts.footer />
   </body>
 </html>
