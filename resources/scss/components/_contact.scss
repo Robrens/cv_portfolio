@@ -1,6 +1,6 @@
 #contact {
   .site-container {
-    border-radius: 16px 16px 0 0;
+    border-radius: var(--radius-button);
     background:
       radial-gradient(circle at 10% 20%, rgb(255 255 255 / 0.18), transparent 26%),
       linear-gradient(135deg, var(--color-brand-accent), var(--color-brand-accent-hover));
