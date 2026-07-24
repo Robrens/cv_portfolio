@@ -144,6 +144,43 @@ class ProfileForm
                     ])
                     ->columns(2),
 
+            Section::make('Titres des sections')
+                ->description(
+                    'Titres affichés au-dessus des contenus gérés par leurs ressources respectives.'
+                )
+                ->schema([
+                    TextInput::make('skills_eyebrow')
+                        ->label('Surtitre des compétences')
+                        ->default('Compétences techniques')
+                        ->maxLength(255),
+
+                    TextInput::make('skills_title')
+                        ->label('Titre des compétences')
+                        ->default('Ce que je maîtrise')
+                        ->maxLength(255),
+
+                    TextInput::make('career_eyebrow')
+                        ->label('Surtitre du parcours')
+                        ->default('Parcours professionnel')
+                        ->maxLength(255),
+
+                    TextInput::make('career_title')
+                        ->label('Titre du parcours')
+                        ->default('Mon expérience en action')
+                        ->maxLength(255),
+
+                    TextInput::make('approach_eyebrow')
+                        ->label('Surtitre de la démarche')
+                        ->default('Démarche')
+                        ->maxLength(255),
+
+                    TextInput::make('approach_title')
+                        ->label('Titre de la démarche')
+                        ->default('Ma façon de travailler')
+                        ->maxLength(255),
+                ])
+                ->columns(2),
+
                 Section::make('Passions & moi')
                     ->description(
                         'Textes généraux de la section et configuration de la playlist Spotify.'
