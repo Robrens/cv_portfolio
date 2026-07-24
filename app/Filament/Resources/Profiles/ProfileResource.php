@@ -20,6 +20,12 @@ class ProfileResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?string $navigationLabel = 'Profil';
+
+    protected static ?string $modelLabel = 'profil';
+
+    protected static ?string $pluralModelLabel = 'profils';
+
     public static function form(Schema $schema): Schema
     {
         return ProfileForm::configure($schema);
@@ -35,6 +41,20 @@ class ProfileResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return ! Profile::query()->exists();
+    }
+
+    public static function getNavigationUrl(): string
+    {
+        $profile = Profile::query()->first();
+
+        return $profile
+            ? static::getUrl('edit', ['record' => $profile])
+            : static::getUrl('create');
     }
 
     public static function getPages(): array
