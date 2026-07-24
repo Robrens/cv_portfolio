@@ -6,20 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('profile_stats', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('profile_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->string('value');
+            $table->string('unit')->nullable();
+            $table->string('label');
+            $table->string('icon')->nullable();
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('profile_stats');
