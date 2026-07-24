@@ -21,6 +21,7 @@ class Profile extends Model
         'hero_title_secondary_highlight',
         'hero_title_after',
         'hero_description',
+        'portrait_path',
         'about_eyebrow',
         'about_title',
         'about_description',
