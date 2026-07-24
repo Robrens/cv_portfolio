@@ -2,7 +2,7 @@
 'profile',
 ])
 
-<section class="section about">
+<section class="section about" id="about">
   <div class="site-container">
     <div>
       @if ($profile->about_eyebrow)
