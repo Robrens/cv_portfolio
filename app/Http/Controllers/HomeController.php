@@ -17,6 +17,10 @@ class HomeController extends Controller
                 'stats' => fn($query) => $query
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
+
+                'passions' => fn($query) => $query
+                    ->where('is_active', true)
+                    ->orderBy('sort_order'),
             ])
             ->first();
 
