@@ -13,7 +13,8 @@
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.ts']) @endif
   </head>
   <body>
-    <x-layouts.header :profile="$profile" />
+    <x-layouts.header :profile="$profile" :skill-categories="$skillCategories" :experiences="$experiences"
+      :work-methods="$workMethods" />
 
     <main>
       <x-layouts.hero :profile="$profile" />
