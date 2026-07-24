@@ -6,6 +6,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class ProfileForm
@@ -102,6 +103,69 @@ class ProfileForm
                         Textarea::make('about_secondary_description')
                             ->label('Second paragraphe')
                             ->rows(5),
+                    ])
+                    ->columns(2),
+
+                Section::make('Passions & moi')
+                    ->description(
+                        'Textes généraux de la section et configuration de la playlist Spotify.'
+                    )
+                    ->schema([
+                        TextInput::make('passions_eyebrow')
+                            ->label('Surtitre')
+                            ->placeholder('Passions & moi')
+                            ->maxLength(255),
+
+                        TextInput::make('passions_title')
+                            ->label('Titre')
+                            ->placeholder('Au-delà du code')
+                            ->maxLength(255),
+
+                        TextInput::make('passions_subtitle')
+                            ->label('Sous-titre')
+                            ->placeholder(
+                                'Parce qu’un bon équilibre nourrit aussi la créativité.'
+                            )
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+
+                        Textarea::make('passions_description')
+                            ->label('Premier paragraphe')
+                            ->rows(5),
+
+                        Textarea::make('passions_secondary_description')
+                            ->label('Second paragraphe')
+                            ->rows(5),
+
+                        TextInput::make('spotify_title')
+                            ->label('Titre du bloc Spotify')
+                            ->placeholder('Ce qui tourne en boucle')
+                            ->maxLength(255),
+
+                        Textarea::make('spotify_description')
+                            ->label('Description du bloc Spotify')
+                            ->rows(4),
+
+                        TextInput::make('spotify_url')
+                            ->label('URL de la playlist Spotify')
+                            ->placeholder(
+                                'https://open.spotify.com/playlist/…'
+                            )
+                            ->helperText(
+                                'Utilise l’URL complète d’une playlist publique Spotify.'
+                            )
+                            ->url()
+                            ->rules([
+                                'nullable',
+                                'starts_with:https://open.spotify.com/playlist/',
+                            ])
+                            ->maxLength(2048)
+                            ->columnSpanFull(),
+
+                        Toggle::make('passions_is_active')
+                            ->label('Afficher la section')
+                            ->default(true)
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
 
