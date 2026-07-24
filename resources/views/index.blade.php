@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,14 +13,22 @@
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.ts']) @endif
   </head>
   <body>
-    <x-layouts.header />
-    <x-layouts.hero />
-    <x-layouts.about />
-    <x-layouts.skills />
-    <x-layouts.career />
-    <x-layouts.approach />
-    <x-layouts.passions />
-    <x-layouts.contact />
-    <x-layouts.footer />
+    <x-layouts.header :profile="$profile" />
+
+    <main>
+      <x-layouts.hero :profile="$profile" />
+      <x-layouts.about :profile="$profile" />
+      <x-layouts.skills :skill-categories="$skillCategories" />
+      <x-layouts.career :experiences="$experiences" />
+      <x-layouts.approach :work-methods="$workMethods" />
+
+      @if ($profile->passions_is_active)
+      <x-layouts.passions :profile="$profile" />
+      @endif
+
+      <x-layouts.contact :profile="$profile" />
+    </main>
+
+    <x-layouts.footer :profile="$profile" />
   </body>
 </html>
