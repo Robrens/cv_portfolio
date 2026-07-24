@@ -80,6 +80,25 @@ class ProfileForm
                             ->rows(4)
                             ->columnSpanFull(),
 
+                        TextInput::make('opportunity_title')
+                            ->label('Titre des opportunités')
+                            ->placeholder('Ouvert aux opportunités')
+                            ->maxLength(255),
+
+                        TextInput::make('opportunity_description')
+                            ->label('Précision sur les opportunités')
+                            ->placeholder('Alternance ou projet applicatif')
+                            ->maxLength(255),
+
+                        TextInput::make('training_title')
+                            ->label('Titre des formations')
+                            ->placeholder('Alternance Bac+5')
+                            ->maxLength(255),
+
+                        TextInput::make('training_description')
+                            ->label('Précision sur les formations')
+                            ->placeholder('Architecture & développement logiciel')
+                            ->maxLength(255),
                         FileUpload::make('portrait_path')
                             ->label('Portrait')
                             ->disk('public')
