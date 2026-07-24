@@ -25,6 +25,15 @@ class Profile extends Model
         'about_title',
         'about_description',
         'about_secondary_description',
+        'passions_eyebrow',
+        'passions_title',
+        'passions_subtitle',
+        'passions_description',
+        'passions_secondary_description',
+        'spotify_title',
+        'spotify_description',
+        'spotify_url',
+        'passions_is_active',
         'location',
         'availability',
         'email',
@@ -37,6 +46,19 @@ class Profile extends Model
     public function stats(): HasMany
     {
         return $this->hasMany(ProfileStat::class)
+            ->orderBy('sort_order');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'passions_is_active' => 'boolean',
+        ];
+    }
+
+    public function passions(): HasMany
+    {
+        return $this->hasMany(Passion::class)
             ->orderBy('sort_order');
     }
 }
