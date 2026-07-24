@@ -65,27 +65,45 @@
         </li>
         @endif
 
+        @if ($profile->opportunity_title || $profile->opportunity_description)
         <li class="hero-info-item">
-          <x-heroicon-o-briefcase class="hero-info-icon" />
+          <x-heroicon-o-briefcase class="hero-info-icon" aria-hidden="true" />
 
           <div class="hero-info-content">
-            <h3 class="hero-info-title">Opportunités</h3>
+            @if ($profile->opportunity_title)
+            <h3 class="hero-info-title">
+              {{ $profile->opportunity_title }}
+            </h3>
+            @endif
+
+            @if ($profile->opportunity_description)
             <p class="hero-info-text">
-              Alternance ou projet applicatif
+              {{ $profile->opportunity_description }}
             </p>
+            @endif
           </div>
         </li>
+        @endif
 
+        @if ($profile->training_title || $profile->training_description)
         <li class="hero-info-item">
-          <x-heroicon-o-academic-cap class="hero-info-icon" />
+          <x-heroicon-o-academic-cap class="hero-info-icon" aria-hidden="true" />
 
           <div class="hero-info-content">
-            <h3 class="hero-info-title">Alternance Bac+5</h3>
+            @if ($profile->training_title)
+            <h3 class="hero-info-title">
+              {{ $profile->training_title }}
+            </h3>
+            @endif
+
+            @if ($profile->training_description)
             <p class="hero-info-text">
-              Architecture & développement logiciel
+              {{ $profile->training_description }}
             </p>
+            @endif
           </div>
         </li>
+        @endif
 
         @if ($profile->availability)
         <li class="hero-info-item">
