@@ -7,6 +7,8 @@ use App\Filament\Resources\Profiles\Pages\EditProfile;
 use App\Filament\Resources\Profiles\Pages\ListProfiles;
 use App\Filament\Resources\Profiles\Schemas\ProfileForm;
 use App\Filament\Resources\Profiles\Tables\ProfilesTable;
+use App\Filament\Resources\Profiles\RelationManagers\PassionsRelationManager;
+use App\Filament\Resources\Profiles\RelationManagers\StatsRelationManager;
 use App\Models\Profile;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -39,7 +41,9 @@ class ProfileResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\StatsRelationManager::class,
+            StatsRelationManager::class,
+            PassionsRelationManager::class,
+
         ];
     }
 
