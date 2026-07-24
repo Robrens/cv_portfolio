@@ -45,11 +45,13 @@
         </div>
       </div>
 
+      @if ($profile->portrait_path)
       <div class="hero-portrait order-3 lg:order-2">
-        <img src="{{ asset('storage/hero/profil-picture.png') }}"
-          alt="Portrait de {{ $profile->first_name }} {{ $profile->last_name }}"
-          class="w-full object-cover shadow-card">
+        <img src="{{ asset('storage/' . $profile->portrait_path) }}"
+          alt="Portrait de {{ $profile->first_name }} {{ $profile->last_name }}" class="w-full object-cover shadow-card"
+          fetchpriority="high">
       </div>
+      @endif
 
       <ul class="hero-info-list order-2 lg:order-3">
         @if ($profile->location)
