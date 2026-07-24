@@ -7,6 +7,7 @@ use App\Filament\Resources\SkillCategories\Pages\EditSkillCategory;
 use App\Filament\Resources\SkillCategories\Pages\ListSkillCategories;
 use App\Filament\Resources\SkillCategories\Schemas\SkillCategoryForm;
 use App\Filament\Resources\SkillCategories\Tables\SkillCategoriesTable;
+use App\Filament\Resources\SkillCategories\RelationManagers\SkillsRelationManager;
 use App\Models\SkillCategory;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -33,7 +34,7 @@ class SkillCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SkillsRelationManager::class,
         ];
     }
 
