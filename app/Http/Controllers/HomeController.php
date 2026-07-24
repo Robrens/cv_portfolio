@@ -22,7 +22,7 @@ class HomeController extends Controller
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
             ])
-            ->first();
+            ->firstOrFail();
 
         $skillCategories = SkillCategory::query()
             ->where('is_active', true)
