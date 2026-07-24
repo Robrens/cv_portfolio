@@ -5,6 +5,7 @@
 @if (
 filled($profile->contact_title)
 || filled($profile->contact_description)
+|| filled($profile->contact_button_label)
 || filled($profile->email)
 )
 <section class="section contact-cta-section" id="contact">
