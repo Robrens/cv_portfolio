@@ -79,6 +79,25 @@ class ProfileForm
                             ->required()
                             ->rows(4)
                             ->columnSpanFull(),
+
+                        FileUpload::make('portrait_path')
+                            ->label('Portrait')
+                            ->disk('public')
+                            ->directory('images/hero')
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatioOptions([
+                                '4:5',
+                            ])
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                            ])
+                            ->maxSize(5 * 1024)
+                            ->openable()
+                            ->downloadable()
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
 
