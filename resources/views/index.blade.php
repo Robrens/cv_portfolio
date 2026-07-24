@@ -20,9 +20,11 @@
     <main>
       <x-layouts.hero :profile="$profile" />
       <x-layouts.about :profile="$profile" />
-      <x-layouts.skills :skill-categories="$skillCategories" />
-      <x-layouts.career :experiences="$experiences" />
-      <x-layouts.approach :work-methods="$workMethods" />
+      <x-layouts.skills :profile="$profile" :skill-categories="$skillCategories" />
+
+      <x-layouts.career :profile="$profile" :experiences="$experiences" />
+
+      <x-layouts.approach :profile="$profile" :work-methods="$workMethods" />
 
       @if ($profile->passions_is_active)
       <x-layouts.passions :profile="$profile" />

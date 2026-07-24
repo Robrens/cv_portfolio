@@ -1,19 +1,26 @@
 @props([
 'workMethods',
+'profile',
 ])
 
 @if ($workMethods->isNotEmpty())
 <section class="section approach" id="approach">
   <div class="site-container rounded-card bg-brand-primary">
+    @if ($profile->approach_eyebrow || $profile->approach_title)
     <div class="mb-5 md:mb-8 lg:mb-12">
+      @if ($profile->approach_eyebrow)
       <h2 class="text-content-third uppercase subtitle font-semibold">
-        Démarche
+        {{ $profile->approach_eyebrow }}
       </h2>
+      @endif
 
+      @if ($profile->approach_title)
       <h1 class="section-title mt-4 text-white">
-        Ma façon de travailler
+        {{ $profile->approach_title }}
       </h1>
+      @endif
     </div>
+    @endif
 
     <ul class="flex flex-row flex-wrap">
       @foreach ($workMethods as $workMethod)

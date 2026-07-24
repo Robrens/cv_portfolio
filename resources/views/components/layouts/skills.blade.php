@@ -1,19 +1,26 @@
 @props([
+'profile',
 'skillCategories',
 ])
 
 @if ($skillCategories->isNotEmpty())
 <section id="skills" class="section skills" x-data="{ activeTab: @js($skillCategories->first()->slug) }">
   <div class="site-container rounded-card bg-brand-primary">
+    @if ($profile->skills_eyebrow || $profile->skills_title)
     <div>
+      @if ($profile->skills_eyebrow)
       <h2 class="subtitle font-semibold uppercase text-brand-accent">
-        Compétences techniques
+        {{ $profile->skills_eyebrow }}
       </h2>
+      @endif
 
+      @if ($profile->skills_title)
       <h1 class="section-title mt-4 text-white">
-        Ce que je maîtrise
+        {{ $profile->skills_title }}
       </h1>
+      @endif
     </div>
+    @endif
 
     <nav class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Catégories de compétences">
       @foreach ($skillCategories as $category)
