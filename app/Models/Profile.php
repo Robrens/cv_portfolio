@@ -46,6 +46,12 @@ class Profile extends Model
         'contact_title',
         'contact_description',
         'contact_button_label',
+        'skills_eyebrow',
+        'skills_title',
+        'career_eyebrow',
+        'career_title',
+        'approach_eyebrow',
+        'approach_title',
     ];
 
     public function stats(): HasMany
