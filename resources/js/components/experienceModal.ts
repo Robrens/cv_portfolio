@@ -3,7 +3,7 @@ export default function experienceModal(modalId: string) {
     modalId,
     open(): void {
       const dialog = document.getElementById(this.modalId);
-      
+
       if (dialog instanceof HTMLDialogElement && !dialog.open) {
         dialog.showModal();
       }

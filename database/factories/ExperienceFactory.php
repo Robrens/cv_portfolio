@@ -20,12 +20,12 @@ class ExperienceFactory extends Factory
 
     public function inactive(): static
     {
-        return $this->state(fn() => ['is_active' => false]);
+        return $this->state(fn () => ['is_active' => false]);
     }
 
     public function withDetails(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'details' => 'Description détaillée de cette expérience.',
             'responsibilities' => ['Maintenir les applications'],
             'technologies' => ['Laravel', 'PostgreSQL'],

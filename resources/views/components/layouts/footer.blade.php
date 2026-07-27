@@ -1,51 +1,23 @@
-@props([
-'profile',
-'skillCategories',
-'experiences',
-'workMethods',
-'socialLinks',
-])
-
-@php
-$hasAbout = filled($profile->about_title)
-|| filled($profile->about_description)
-|| $profile->stats->isNotEmpty();
-
-$hasContact = filled($profile->contact_title)
-|| filled($profile->contact_description)
-|| filled($profile->email);
-
-$initials = mb_strtoupper(
-mb_substr($profile->first_name ?? '', 0, 1)
-. mb_substr($profile->last_name ?? '', 0, 1)
-);
-
-$fullName = trim(
-($profile->first_name ?? '')
-. ' '
-. ($profile->last_name ?? '')
-);
-@endphp
+@props([ 'profile', 'skillCategories', 'experiences', 'workMethods', 'socialLinks', ]) @php
+$hasAbout = filled($profile->about_title) || filled($profile->about_description) ||
+$profile->stats->isNotEmpty(); $hasContact = filled($profile->contact_title) ||
+filled($profile->contact_description) || filled($profile->email); $initials = mb_strtoupper(
+mb_substr($profile->first_name ?? '', 0, 1) . mb_substr($profile->last_name ?? '', 0, 1) );
+$fullName = trim( ($profile->first_name ?? '') . ' ' . ($profile->last_name ?? '') ); @endphp
 
 <footer class="footer">
   <div class="site-container">
     <div class="footer__inner">
       <div class="footer__brand">
-        <a href="#top" class="footer__logo" title="Retour en haut de page">
-          {{ $initials }}
-        </a>
+        <a href="#top" class="footer__logo" title="Retour en haut de page"> {{ $initials }} </a>
 
         @if ($profile->job_title)
-        <p class="footer__job">
-          {{ $profile->job_title }}
-        </p>
+        <p class="footer__job">{{ $profile->job_title }}</p>
         @endif
       </div>
 
       <nav class="footer__block" aria-label="Navigation secondaire">
-        <h2 class="footer__title">
-          Navigation
-        </h2>
+        <h2 class="footer__title">Navigation</h2>
 
         <ul class="footer__list">
           <li>
@@ -54,37 +26,39 @@ $fullName = trim(
 
           @if ($hasAbout)
           <li>
-            <a href="{{ request()->routeIs('home') ? '#about' : route('home') . '#about' }}">À propos</a>
+            <a href="{{ request()->routeIs('home') ? '#about' : route('home') . '#about' }}"
+              >À propos</a
+            >
           </li>
-          @endif
-
-          @if ($skillCategories->isNotEmpty())
+          @endif @if ($skillCategories->isNotEmpty())
           <li>
-            <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}">Compétences</a>
+            <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}"
+              >Compétences</a
+            >
           </li>
-          @endif
-
-          @if ($experiences->isNotEmpty())
+          @endif @if ($experiences->isNotEmpty())
           <li>
-            <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}">Parcours</a>
+            <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}"
+              >Parcours</a
+            >
           </li>
-          @endif
-
-          @if ($workMethods->isNotEmpty())
+          @endif @if ($workMethods->isNotEmpty())
           <li>
-            <a href="{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}">Démarche</a>
+            <a href="{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}"
+              >Démarche</a
+            >
           </li>
-          @endif
-
-          @if ($profile->passions_is_active)
+          @endif @if ($profile->passions_is_active)
           <li>
-            <a href="{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}">Passions</a>
+            <a href="{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}"
+              >Passions</a
+            >
           </li>
-          @endif
-
-          @if ($hasContact)
+          @endif @if ($hasContact)
           <li>
-            <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}">Contact</a>
+            <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}"
+              >Contact</a
+            >
           </li>
           @endif
         </ul>
@@ -92,9 +66,7 @@ $fullName = trim(
 
       @if ($socialLinks->isNotEmpty() || $profile->email)
       <div class="footer__block">
-        <h2 class="footer__title">
-          Me suivre
-        </h2>
+        <h2 class="footer__title">Me suivre</h2>
 
         <ul class="footer__list">
           @foreach ($socialLinks as $socialLink)
@@ -105,9 +77,7 @@ $fullName = trim(
               <span>{{ $socialLink->name }}</span>
             </a>
           </li>
-          @endforeach
-
-          @if ($profile->email)
+          @endforeach @if ($profile->email)
           <li>
             <a href="mailto:{{ $profile->email }}">
               <x-icons.icon name="envelope" class="footer__icon" aria-hidden="true" />
@@ -117,25 +87,15 @@ $fullName = trim(
           @endif
         </ul>
       </div>
-      @endif
-
-      @if ($profile->location || $profile->availability)
+      @endif @if ($profile->location || $profile->availability)
       <div class="footer__block footer__infos">
-        <h2 class="footer__title">
-          Informations
-        </h2>
+        <h2 class="footer__title">Informations</h2>
 
         <ul class="footer__list">
           @if ($profile->location)
-          <li>
-            {{ $profile->location }}
-          </li>
-          @endif
-
-          @if ($profile->availability)
-          <li>
-            {{ $profile->availability }}
-          </li>
+          <li>{{ $profile->location }}</li>
+          @endif @if ($profile->availability)
+          <li>{{ $profile->availability }}</li>
           @endif
         </ul>
       </div>
@@ -144,13 +104,7 @@ $fullName = trim(
 
     <div class="footer__bottom flex flex-col lg:flex-row gap-5 lg:justify-between">
       <p class="footer__copyright">
-        © {{ date('Y') }}
-
-        @if ($fullName)
-        {{ $fullName }} —
-        @endif
-
-        Tous droits réservés.
+        © {{ date('Y') }} @if ($fullName) {{ $fullName }} — @endif Tous droits réservés.
       </p>
       <div class="flex flex-col lg:flex-row gap-5">
         <a href="/legal-notices">Mentions légales</a>

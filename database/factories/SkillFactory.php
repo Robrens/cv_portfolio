@@ -19,6 +19,6 @@ class SkillFactory extends Factory
 
     public function inactive(): static
     {
-        return $this->state(fn() => ['is_active' => false]);
+        return $this->state(fn () => ['is_active' => false]);
     }
 }

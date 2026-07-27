@@ -4,8 +4,8 @@ namespace App\Filament\Resources\Experiences\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -80,16 +80,16 @@ class ExperienceForm
                             ->label('Mois de fin')
                             ->options(self::monthOptions())
                             ->native(false)
-                            ->disabled(fn(Get $get): bool => $get('is_current'))
-                            ->required(fn(Get $get): bool => ! $get('is_current')),
+                            ->disabled(fn (Get $get): bool => $get('is_current'))
+                            ->required(fn (Get $get): bool => ! $get('is_current')),
 
                         TextInput::make('end_year')
                             ->label('Année de fin')
                             ->numeric()
                             ->minValue(1900)
                             ->maxValue(2100)
-                            ->disabled(fn(Get $get): bool => $get('is_current'))
-                            ->required(fn(Get $get): bool => ! $get('is_current')),
+                            ->disabled(fn (Get $get): bool => $get('is_current'))
+                            ->required(fn (Get $get): bool => ! $get('is_current')),
                     ])
                     ->columns(2),
 

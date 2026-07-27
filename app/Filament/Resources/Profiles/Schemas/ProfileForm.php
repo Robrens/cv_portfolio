@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\Profiles\Schemas;
 
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ProfileForm
@@ -144,42 +144,42 @@ class ProfileForm
                     ])
                     ->columns(2),
 
-            Section::make('Titres des sections')
-                ->description(
-                    'Titres affichés au-dessus des contenus gérés par leurs ressources respectives.'
-                )
-                ->schema([
-                    TextInput::make('skills_eyebrow')
-                        ->label('Surtitre des compétences')
-                        ->default('Compétences techniques')
-                        ->maxLength(255),
+                Section::make('Titres des sections')
+                    ->description(
+                        'Titres affichés au-dessus des contenus gérés par leurs ressources respectives.'
+                    )
+                    ->schema([
+                        TextInput::make('skills_eyebrow')
+                            ->label('Surtitre des compétences')
+                            ->default('Compétences techniques')
+                            ->maxLength(255),
 
-                    TextInput::make('skills_title')
-                        ->label('Titre des compétences')
-                        ->default('Ce que je maîtrise')
-                        ->maxLength(255),
+                        TextInput::make('skills_title')
+                            ->label('Titre des compétences')
+                            ->default('Ce que je maîtrise')
+                            ->maxLength(255),
 
-                    TextInput::make('career_eyebrow')
-                        ->label('Surtitre du parcours')
-                        ->default('Parcours professionnel')
-                        ->maxLength(255),
+                        TextInput::make('career_eyebrow')
+                            ->label('Surtitre du parcours')
+                            ->default('Parcours professionnel')
+                            ->maxLength(255),
 
-                    TextInput::make('career_title')
-                        ->label('Titre du parcours')
-                        ->default('Mon expérience en action')
-                        ->maxLength(255),
+                        TextInput::make('career_title')
+                            ->label('Titre du parcours')
+                            ->default('Mon expérience en action')
+                            ->maxLength(255),
 
-                    TextInput::make('approach_eyebrow')
-                        ->label('Surtitre de la démarche')
-                        ->default('Démarche')
-                        ->maxLength(255),
+                        TextInput::make('approach_eyebrow')
+                            ->label('Surtitre de la démarche')
+                            ->default('Démarche')
+                            ->maxLength(255),
 
-                    TextInput::make('approach_title')
-                        ->label('Titre de la démarche')
-                        ->default('Ma façon de travailler')
-                        ->maxLength(255),
-                ])
-                ->columns(2),
+                        TextInput::make('approach_title')
+                            ->label('Titre de la démarche')
+                            ->default('Ma façon de travailler')
+                            ->maxLength(255),
+                    ])
+                    ->columns(2),
 
                 Section::make('Passions & moi')
                     ->description(

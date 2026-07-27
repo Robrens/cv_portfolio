@@ -21,13 +21,11 @@ use Illuminate\Notifications\Notifiable;
     'app_authentication_secret',
     'app_authentication_recovery_codes',
 ])]
-class User extends Authenticatable implements
-    FilamentUser,
-    HasAppAuthentication,
-    HasAppAuthenticationRecovery
+class User extends Authenticatable implements FilamentUser, HasAppAuthentication, HasAppAuthenticationRecovery
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use InteractsWithAppAuthentication;
     use InteractsWithAppAuthenticationRecovery;
     use Notifiable;
