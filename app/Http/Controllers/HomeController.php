@@ -6,6 +6,7 @@ use App\Models\Experience;
 use App\Models\Profile;
 use App\Models\SkillCategory;
 use App\Models\WorkMethod;
+use App\Models\SocialLink;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -22,7 +23,7 @@ class HomeController extends Controller
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
             ])
-            ->first();
+            ->firstOrFail();
 
         $skillCategories = SkillCategory::query()
             ->where('is_active', true)
@@ -44,11 +45,17 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        $socialLinks = SocialLink::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
         return view('index', compact(
             'profile',
             'skillCategories',
             'experiences',
             'workMethods',
+            'socialLinks'
         ));
     }
 }

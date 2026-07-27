@@ -79,6 +79,44 @@ class ProfileForm
                             ->required()
                             ->rows(4)
                             ->columnSpanFull(),
+
+                        TextInput::make('opportunity_title')
+                            ->label('Titre des opportunités')
+                            ->placeholder('Ouvert aux opportunités')
+                            ->maxLength(255),
+
+                        TextInput::make('opportunity_description')
+                            ->label('Précision sur les opportunités')
+                            ->placeholder('Alternance ou projet applicatif')
+                            ->maxLength(255),
+
+                        TextInput::make('training_title')
+                            ->label('Titre des formations')
+                            ->placeholder('Alternance Bac+5')
+                            ->maxLength(255),
+
+                        TextInput::make('training_description')
+                            ->label('Précision sur les formations')
+                            ->placeholder('Architecture & développement logiciel')
+                            ->maxLength(255),
+                        FileUpload::make('portrait_path')
+                            ->label('Portrait')
+                            ->disk('public')
+                            ->directory('images/hero')
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatioOptions([
+                                '4:5',
+                            ])
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                            ])
+                            ->maxSize(5 * 1024)
+                            ->openable()
+                            ->downloadable()
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
 
@@ -105,6 +143,43 @@ class ProfileForm
                             ->rows(5),
                     ])
                     ->columns(2),
+
+            Section::make('Titres des sections')
+                ->description(
+                    'Titres affichés au-dessus des contenus gérés par leurs ressources respectives.'
+                )
+                ->schema([
+                    TextInput::make('skills_eyebrow')
+                        ->label('Surtitre des compétences')
+                        ->default('Compétences techniques')
+                        ->maxLength(255),
+
+                    TextInput::make('skills_title')
+                        ->label('Titre des compétences')
+                        ->default('Ce que je maîtrise')
+                        ->maxLength(255),
+
+                    TextInput::make('career_eyebrow')
+                        ->label('Surtitre du parcours')
+                        ->default('Parcours professionnel')
+                        ->maxLength(255),
+
+                    TextInput::make('career_title')
+                        ->label('Titre du parcours')
+                        ->default('Mon expérience en action')
+                        ->maxLength(255),
+
+                    TextInput::make('approach_eyebrow')
+                        ->label('Surtitre de la démarche')
+                        ->default('Démarche')
+                        ->maxLength(255),
+
+                    TextInput::make('approach_title')
+                        ->label('Titre de la démarche')
+                        ->default('Ma façon de travailler')
+                        ->maxLength(255),
+                ])
+                ->columns(2),
 
                 Section::make('Passions & moi')
                     ->description(

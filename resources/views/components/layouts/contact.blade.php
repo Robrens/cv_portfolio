@@ -1,3 +1,13 @@
+@props([
+'profile',
+])
+
+@if (
+filled($profile->contact_title)
+|| filled($profile->contact_description)
+|| filled($profile->contact_button_label)
+|| filled($profile->email)
+)
 <section class="section contact-cta-section" id="contact">
   <div class="site-container">
     <div class="contact-cta">
@@ -7,21 +17,28 @@
         </div>
 
         <div>
+          @if ($profile->contact_title)
           <h2 class="contact-cta__title">
-            Travaillons ensemble
+            {{ $profile->contact_title }}
           </h2>
+          @endif
 
+          @if ($profile->contact_description)
           <p class="contact-cta__text">
-            Je suis à la recherche d'une alternance Bac+5 en architecture
-            et développement logiciel à partir de septembre 2026.
+            {{ $profile->contact_description }}
           </p>
+          @endif
         </div>
       </div>
 
-      <a href="mailto:jbb.codi@gmail.com" class="contact-cta__button">
-        Me contacter
-        <x-heroicon-s-arrow-right class="contact-cta__button-icon" />
+      @if ($profile->email)
+      <a href="mailto:{{ $profile->email }}" class="contact-cta__button">
+        {{ $profile->contact_button_label ?: 'Me contacter' }}
+
+        <x-heroicon-s-arrow-right class="contact-cta__button-icon" aria-hidden="true" />
       </a>
+      @endif
     </div>
   </div>
 </section>
+@endif
