@@ -123,7 +123,7 @@ $resumeUrl = $profile->resume_path
       </nav>
 
       @if ($resumeUrl)
-      <a href="{{ $resumeUrl }}" class="btn btn-primary hidden shrink-0 lg:inline-flex" download>
+      <a href="{{ $resumeUrl }}" class="btn btn-primary hidden shrink-0 lg:inline-flex" download="BAUDU_CV.pdf">
         Télécharger mon CV
 
         <x-heroicon-o-arrow-down-tray class="size-5" aria-hidden="true" />
@@ -199,7 +199,7 @@ $resumeUrl = $profile->resume_path
     </nav>
 
     @if ($resumeUrl)
-    <a href="{{ $resumeUrl }}" class="btn btn-primary mt-8" download>
+    <a href="{{ $resumeUrl }}" class="btn btn-primary mt-8" download="BAUDU_CV.pdf">
       Télécharger mon CV
 
       <x-heroicon-o-arrow-down-tray class="size-5" aria-hidden="true" />

@@ -34,7 +34,7 @@
 
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           @if ($profile->resume_path)
-          <a href="{{ asset('storage/' . $profile->resume_path) }}" class="btn btn-primary" download>
+          <a href="{{ asset('storage/' . $profile->resume_path) }}" class="btn btn-primary" download="BAUDU_CV.pdf">
             Télécharger mon CV
           </a>
           @endif
