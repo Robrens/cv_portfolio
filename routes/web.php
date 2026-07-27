@@ -6,8 +6,8 @@ use App\Http\Controllers\HomeController;
 Route::get('/', HomeController::class)
     ->name('home');
 
-Route::view('/legal-notices', 'legal.legal-notices')
+Route::get('/legal-notices', HomeController::class)
     ->name('legal.mentions');
 
-Route::view('/privacy-notices', 'legal.privacy-notices')
+Route::get('/privacy-policy', HomeController::class)
     ->name('legal.privacy');
