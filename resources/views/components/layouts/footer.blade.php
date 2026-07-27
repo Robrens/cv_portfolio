@@ -100,12 +100,9 @@ $fullName = trim(
           @foreach ($socialLinks as $socialLink)
           <li>
             <a href="{{ $socialLink->url }}" target="_blank" rel="noopener noreferrer">
-              @if ($socialLink->icon)
-              <x-dynamic-component :component="'heroicon-o-' . $socialLink->icon" class="footer__icon"
-                aria-hidden="true" />
-              @endif
+              <x-icons.icon :name="$socialLink->icon" class="footer__icon" aria-hidden="true" />
 
-              {{ $socialLink->name }}
+              <span>{{ $socialLink->name }}</span>
             </a>
           </li>
           @endforeach
@@ -113,8 +110,7 @@ $fullName = trim(
           @if ($profile->email)
           <li>
             <a href="mailto:{{ $profile->email }}">
-              <x-heroicon-o-envelope class="footer__icon" aria-hidden="true" />
-
+              <x-icons.icon name="envelope" class="footer__icon" aria-hidden="true" />
               Email
             </a>
           </li>
