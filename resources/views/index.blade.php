@@ -18,19 +18,27 @@
       :work-methods="$workMethods" />
 
     <main>
-      <x-layouts.hero :profile="$profile" />
-      <x-layouts.about :profile="$profile" />
-      <x-layouts.skills :profile="$profile" :skill-categories="$skillCategories" />
+      @if(request()->routeIs('home'))
+        <x-layouts.hero :profile="$profile" />
+        <x-layouts.about :profile="$profile" />
+        <x-layouts.skills :profile="$profile" :skill-categories="$skillCategories" />
 
-      <x-layouts.career :profile="$profile" :experiences="$experiences" />
+        <x-layouts.career :profile="$profile" :experiences="$experiences" />
 
-      <x-layouts.approach :profile="$profile" :work-methods="$workMethods" />
+        <x-layouts.approach :profile="$profile" :work-methods="$workMethods" />
 
-      @if ($profile->passions_is_active)
-      <x-layouts.passions :profile="$profile" />
+        @if ($profile->passions_is_active)
+        <x-layouts.passions :profile="$profile" />
+        @endif
+        <x-layouts.contact :profile="$profile" />
+
+      @elseif(request()->routeIs('legal.mentions'))
+        <x-legal.legal-notices />
+      @elseif(request()->routeIs('legal.privacy'))
+        <x-legal.privacy-policy />
+      @else
+        oups
       @endif
-
-      <x-layouts.contact :profile="$profile" />
     </main>
 
     <x-layouts.footer :profile="$profile" :skill-categories="$skillCategories" :experiences="$experiences"
