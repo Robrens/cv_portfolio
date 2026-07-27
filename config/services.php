@@ -14,8 +14,4 @@ return [
     |
     */
 
-    'spotify' => [
-        'playlist_id' => env('SPOTIFY_PLAYLIST_ID', '7qFRbrrFl2dw2EBFdhTVCF'),
-    ],
-
 ];

@@ -1,18 +1,134 @@
-<header x-data="{ open: false }" x-effect="document.body.classList.toggle('overflow-hidden', open)"
-  @keydown.escape.window="open = false" class="header">
-  <div class="site-header-container">
-    <div class="flex items-center justify-between lg:justify-start lg:gap-10">
-      <div class="lg:w-[20%]">
-        <a href="/" class="title text-brand-accent">JB</a>
-      </div>
+@props([
+'profile',
+'skillCategories',
+'experiences',
+'workMethods',
+])
 
-      <nav class="hidden lg:flex items-center gap-10 lg:w-[75%]" aria-label="desktop navigation">
-        <a href="/" class="nav-link is-active">Accueil</a>
-        <a href="#parcours" class="nav-link">Parcours</a>
-        <a href="#competences" class="nav-link">Compétences</a>
-        <a href="#projets" class="nav-link">Projets</a>
-        <a href="#contact" class="nav-link">Contact</a>
+@php
+$hasAbout = filled($profile->about_title)
+|| filled($profile->about_description)
+|| $profile->stats->isNotEmpty();
+
+$hasContact = filled($profile->contact_title)
+|| filled($profile->contact_description)
+|| filled($profile->email);
+
+$initials = mb_strtoupper(
+mb_substr($profile->first_name, 0, 1)
+. mb_substr($profile->last_name, 0, 1)
+);
+
+$resumeUrl = $profile->resume_path
+? asset('storage/' . $profile->resume_path)
+: null;
+@endphp
+
+<header x-data="{
+    open: false,
+    activeSection: null,
+
+    init() {
+      const updateActiveSection = () => {
+        const headerOffset = this.$root.offsetHeight + 24;
+
+        const sectionIds = [
+          'about',
+          'skills',
+          'career',
+          'approach',
+          'passions',
+          'contact',
+        ];
+
+        let currentSection = null;
+
+        for (const sectionId of sectionIds) {
+          const section = document.getElementById(sectionId);
+
+          if (! section) {
+            continue;
+          }
+
+          if (section.getBoundingClientRect().top <= headerOffset) {
+            currentSection = sectionId;
+          }
+        }
+
+        this.activeSection = currentSection;
+      };
+
+      updateActiveSection();
+
+      window.addEventListener('scroll', updateActiveSection, {
+        passive: true,
+      });
+
+      window.addEventListener('resize', updateActiveSection);
+    },
+  }" x-effect="document.body.classList.toggle('overflow-hidden', open)" @keydown.escape.window="open = false"
+  class="header">
+
+  <div class="site-header-container">
+    <div class="flex items-center justify-between gap-10">
+      <a href="/" class="flex shrink-0 items-center gap-3">
+        <span class="title text-brand-accent">
+          {{ $initials }}
+        </span>
+      </a>
+
+      <nav class="hidden flex-1 items-center justify-center gap-8 lg:flex" aria-label="Navigation principale">
+
+        @if ($hasAbout)
+        <a href="{{ request()->routeIs('home') ? '#about' : route('home') . '#about' }}" class="nav-link" :class="{ 'is-active': activeSection === 'about' }"
+          @click="activeSection = 'about'">
+          À propos
+        </a>
+        @endif
+
+        @if ($skillCategories->isNotEmpty())
+        <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}" class="nav-link" :class="{ 'is-active': activeSection === 'skills' }"
+          @click="activeSection = 'skills'">
+          Compétences
+        </a>
+        @endif
+
+        @if ($experiences->isNotEmpty())
+        <a href="{{ request()->routeIs('home') ? '#career' : route('home') . '#career' }}" class="nav-link" :class="{ 'is-active': activeSection === 'career' }"
+          @click="activeSection = 'career'">
+          Parcours
+        </a>
+        @endif
+
+        @if ($workMethods->isNotEmpty())
+        <a href="{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}" class="nav-link" :class="{ 'is-active': activeSection === 'approach' }"
+          @click="activeSection = 'approach'">
+          Démarche
+        </a>
+        @endif
+
+        @if ($profile->passions_is_active)
+        <a href="{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}" class="nav-link" :class="{ 'is-active': activeSection === 'passions' }"
+          @click="activeSection = 'passions'">
+          Passions
+        </a>
+        @endif
+
+        @if ($hasContact)
+        <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}" class="nav-link" :class="{ 'is-active': activeSection === 'contact' }"
+          @click="activeSection = 'contact'">
+          Contact
+        </a>
+        @endif
       </nav>
+
+      @if ($resumeUrl)
+      <a href="{{ $resumeUrl }}" class="btn btn-primary hidden shrink-0 lg:inline-flex" download="BAUDU_CV.pdf">
+        Télécharger mon CV
+
+        <x-heroicon-o-arrow-down-tray class="size-5" aria-hidden="true" />
+      </a>
+      @endif
 
       <button type="button" class="burger-btn" @click="open = true" :aria-expanded="open.toString()"
         aria-controls="mobile-menu" aria-label="Ouvrir le menu">
@@ -34,12 +150,60 @@
       ×
     </button>
 
-    <nav class="mobile-nav" aria-label="mobile navigation">
-      <a href="/" class="mobile-nav-link is-active" @click="open = false">Accueil</a>
-      <a href="#parcours" class="mobile-nav-link" @click="open = false">Parcours</a>
-      <a href="#competences" class="mobile-nav-link" @click="open = false">Compétences</a>
-      <a href="#projets" class="mobile-nav-link" @click="open = false">Projets</a>
-      <a href="#contact" class="mobile-nav-link" @click="open = false">Contact</a>
+    <nav class="mobile-nav" aria-label="Navigation mobile">
+      <a href="/" class="mobile-nav-link" :class="{ 'is-active': activeSection === null }" @click="open = false">
+        Accueil
+      </a>
+
+      @if ($hasAbout)
+      <a href="#about" class="mobile-nav-link" :class="{ 'is-active': activeSection === 'about' }"
+        @click="activeSection = 'about'; open = false">
+        À propos
+      </a>
+      @endif
+
+      @if ($skillCategories->isNotEmpty())
+      <a href="#skills" class="mobile-nav-link" :class="{ 'is-active': activeSection === 'skills' }"
+        @click="activeSection = 'skills'; open = false">
+        Compétences
+      </a>
+      @endif
+
+      @if ($experiences->isNotEmpty())
+      <a href="#career" class="mobile-nav-link" :class="{ 'is-active': activeSection === 'career' }"
+        @click="activeSection = 'career'; open = false">
+        Parcours
+      </a>
+      @endif
+
+      @if ($workMethods->isNotEmpty())
+      <a href="#approach" class="mobile-nav-link" :class="{ 'is-active': activeSection === 'approach' }"
+        @click="activeSection = 'approach'; open = false">
+        Démarche
+      </a>
+      @endif
+
+      @if ($profile->passions_is_active)
+      <a href="#passions" class="mobile-nav-link" :class="{ 'is-active': activeSection === 'passions' }"
+        @click="activeSection = 'passions'; open = false">
+        Passions
+      </a>
+      @endif
+
+      @if ($hasContact)
+      <a href="#contact" class="mobile-nav-link" :class="{ 'is-active': activeSection === 'contact' }"
+        @click="activeSection = 'contact'; open = false">
+        Contact
+      </a>
+      @endif
     </nav>
+
+    @if ($resumeUrl)
+    <a href="{{ $resumeUrl }}" class="btn btn-primary mt-8" download="BAUDU_CV.pdf">
+      Télécharger mon CV
+
+      <x-heroicon-o-arrow-down-tray class="size-5" aria-hidden="true" />
+    </a>
+    @endif
   </aside>
 </header>
