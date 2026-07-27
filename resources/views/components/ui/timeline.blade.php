@@ -4,7 +4,7 @@
 'title',
 'description',
 'tags' => [],
-'href' => null,
+'modalId' => null,
 ])
 
 <div class="career-item">
@@ -41,11 +41,13 @@
       @endif
     </div>
 
-    @if($href)
-    <a href="{{ $href }}" class="career-link">
+    @if ($modalId)
+    <button x-data type="button" class="career-link" aria-haspopup="dialog" x-on:click="$dispatch('open-experience-modal', {
+            id: @js($modalId)
+        })">
       <span>Voir le détail</span>
       <x-heroicon-o-arrow-right class="h-4 w-4" aria-hidden="true" />
-    </a>
+    </button>
     @endif
   </article>
 </div>
