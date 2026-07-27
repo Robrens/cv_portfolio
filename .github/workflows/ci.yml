@@ -2,18 +2,23 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
-      - develop
+    branches: [master, develop]
   pull_request:
-    branches:
-      - master
-      - develop
+    branches: [master, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  tests:
+  backend:
+    name: Backend (PHP 8.5 / PostgreSQL 18)
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'master' && 'Development' || 'Development' }}
+    environment: Development
     timeout-minutes: 10
 
     services:
@@ -24,9 +29,16 @@ jobs:
           POSTGRES_USER: ${{ secrets.DB_USERNAME }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
-          - 5432:5432
+          - ${{ vars.DB_PORT }}:5432
+        options: >-
+          --health-cmd "pg_isready -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }}"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     env:
+      APP_ENV: testing
+      APP_DEBUG: false
       DB_CONNECTION: ${{ vars.DB_CONNECTION }}
       DB_HOST: ${{ vars.DB_HOST }}
       DB_PORT: ${{ vars.DB_PORT }}
@@ -35,8 +47,26 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Check CI configuration
+        shell: bash
+        run: |
+          if [[ -z "$DB_CONNECTION" || -z "$DB_HOST" || -z "$DB_PORT" ]]; then
+            echo "::error::Missing DB_CONNECTION, DB_HOST or DB_PORT GitHub Actions variable."
+            exit 1
+          fi
+
+          if [[ -z "$DB_DATABASE" || -z "$DB_USERNAME" || -z "$DB_PASSWORD" ]]; then
+            echo "::error::Missing DB_DATABASE, DB_USERNAME or DB_PASSWORD GitHub Actions secret."
+            exit 1
+          fi
+
+          if [[ "$DB_CONNECTION" != "pgsql" ]]; then
+            echo "::error::DB_CONNECTION must be pgsql, got '$DB_CONNECTION'."
+            exit 1
+          fi
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -44,54 +74,108 @@ jobs:
           php-version: '8.5'
           extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql
           coverage: none
+          tools: composer:v2
+
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          mkdir -p storage/framework/{cache/data,sessions,views} bootstrap/cache
+
+      - name: Validate Composer files
+        run: composer validate --strict
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Check PHP formatting
+        run: vendor/bin/pint --test
+
+      - name: Run database migrations
+        run: php artisan migrate:fresh --force
+
+      - name: Verify PostgreSQL test connection
+        run: |
+          php artisan db:show --database=pgsql
+          php -r '
+          require "vendor/autoload.php";
+          $app = require "bootstrap/app.php";
+          $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+          $driver = Illuminate\Support\Facades\DB::connection()->getDriverName();
+          if ($driver !== "pgsql") {
+              fwrite(STDERR, "Expected pgsql, got ".$driver.PHP_EOL);
+              exit(1);
+          }
+          echo "Tests use PostgreSQL.".PHP_EOL;
+          '
+
+      - name: Run Laravel tests
+        run: php artisan test
+
+  frontend:
+    name: Frontend (Node.js 24)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24.18'
-          cache: 'yarn'
-
-      - name: Prepare Laravel directories
-        run: |
-          cp .env.example .env
-          mkdir -p storage/framework/cache/data
-          mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
-          mkdir -p bootstrap/cache
-
-      - name: Install PHP dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
-
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..30}; do
-            if pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_DATABASE"; then
-              echo "PostgreSQL is ready"
-              exit 0
-            fi
-
-            echo "Waiting for PostgreSQL... attempt $i/30"
-            sleep 2
-          done
-
-          echo "PostgreSQL did not become ready in time"
-          exit 1
-        env:
-          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+          cache: yarn
 
       - name: Install JavaScript dependencies
-        run: yarn install --immutable --check-cache
+        run: yarn install --immutable
 
-      - name: Create Laravel environment
-        run: |
-          cp .env.example .env
-          php artisan key:generate
+      - name: Lint TypeScript
+        run: yarn eslint resources/js --max-warnings=0
 
-      - name: Run database migrations
-        run: php artisan migrate --force
-
-      - name: Run Laravel tests
-        run: php artisan test
+      - name: Check frontend formatting
+        run: yarn prettier resources --check
 
       - name: Build frontend assets
         run: yarn build
+
+  master-security:
+    name: Dependency audit
+    if: github.ref == 'refs/heads/master' || github.base_ref == 'master'
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          tools: composer:v2
+
+      - name: Audit Composer dependencies
+        run: composer audit --locked --no-interaction
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.18'
+          cache: yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install --immutable
+
+      - name: Audit JavaScript dependencies
+        run: yarn npm audit --all --recursive --severity high
