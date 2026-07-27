@@ -80,42 +80,42 @@ $resumeUrl = $profile->resume_path
       <nav class="hidden flex-1 items-center justify-center gap-8 lg:flex" aria-label="Navigation principale">
 
         @if ($hasAbout)
-        <a href="#about" class="nav-link" :class="{ 'is-active': activeSection === 'about' }"
+        <a href="{{ request()->routeIs('home') ? '#about' : route('home') . '#about' }}" class="nav-link" :class="{ 'is-active': activeSection === 'about' }"
           @click="activeSection = 'about'">
           À propos
         </a>
         @endif
 
         @if ($skillCategories->isNotEmpty())
-        <a href="#skills" class="nav-link" :class="{ 'is-active': activeSection === 'skills' }"
+        <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}" class="nav-link" :class="{ 'is-active': activeSection === 'skills' }"
           @click="activeSection = 'skills'">
           Compétences
         </a>
         @endif
 
         @if ($experiences->isNotEmpty())
-        <a href="#career" class="nav-link" :class="{ 'is-active': activeSection === 'career' }"
+        <a href="{{ request()->routeIs('home') ? '#career' : route('home') . '#career' }}" class="nav-link" :class="{ 'is-active': activeSection === 'career' }"
           @click="activeSection = 'career'">
           Parcours
         </a>
         @endif
 
         @if ($workMethods->isNotEmpty())
-        <a href="#approach" class="nav-link" :class="{ 'is-active': activeSection === 'approach' }"
+        <a href="{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}" class="nav-link" :class="{ 'is-active': activeSection === 'approach' }"
           @click="activeSection = 'approach'">
           Démarche
         </a>
         @endif
 
         @if ($profile->passions_is_active)
-        <a href="#passions" class="nav-link" :class="{ 'is-active': activeSection === 'passions' }"
+        <a href="#{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}" class="nav-link" :class="{ 'is-active': activeSection === 'passions' }"
           @click="activeSection = 'passions'">
           Passions
         </a>
         @endif
 
         @if ($hasContact)
-        <a href="#contact" class="nav-link" :class="{ 'is-active': activeSection === 'contact' }"
+        <a href="#{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}" class="nav-link" :class="{ 'is-active': activeSection === 'contact' }"
           @click="activeSection = 'contact'">
           Contact
         </a>

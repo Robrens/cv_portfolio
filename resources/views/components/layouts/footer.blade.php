@@ -54,37 +54,37 @@ $fullName = trim(
 
           @if ($hasAbout)
           <li>
-            <a href="#about">À propos</a>
+            <a href="{{ request()->routeIs('home') ? '#about' : route('home') . '#about' }}">À propos</a>
           </li>
           @endif
 
           @if ($skillCategories->isNotEmpty())
           <li>
-            <a href="#skills">Compétences</a>
+            <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}">Compétences</a>
           </li>
           @endif
 
           @if ($experiences->isNotEmpty())
           <li>
-            <a href="#career">Parcours</a>
+            <a href="{{ request()->routeIs('home') ? '#skills' : route('home') . '#skills' }}">Parcours</a>
           </li>
           @endif
 
           @if ($workMethods->isNotEmpty())
           <li>
-            <a href="#approach">Démarche</a>
+            <a href="#{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}">Démarche</a>
           </li>
           @endif
 
           @if ($profile->passions_is_active)
           <li>
-            <a href="#passions">Passions</a>
+            <a href="{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}">Passions</a>
           </li>
           @endif
 
           @if ($hasContact)
           <li>
-            <a href="#contact">Contact</a>
+            <a href="#{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}">Contact</a>
           </li>
           @endif
         </ul>
@@ -142,7 +142,7 @@ $fullName = trim(
       @endif
     </div>
 
-    <div class="footer__bottom">
+    <div class="footer__bottom flex flex-col lg:flex-row gap-5 lg:justify-between">
       <p class="footer__copyright">
         © {{ date('Y') }}
 
@@ -152,6 +152,10 @@ $fullName = trim(
 
         Tous droits réservés.
       </p>
+      <div class="flex flex-col lg:flex-row gap-5">
+        <a href="/legal-notices">Mentions légales</a>
+        <a href="/privacy-policy">Politique de confidentialité</a>
+      </div>
     </div>
   </div>
 </footer>
