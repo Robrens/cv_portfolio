@@ -21,7 +21,9 @@ auth.json
 /vendor
 
 /storage/
-/public/
+public/build/
+public/hot
+public/storage 
 
 /bootstrap/cache/*
 
