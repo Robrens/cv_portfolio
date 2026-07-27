@@ -142,7 +142,7 @@ $fullName = trim(
       @endif
     </div>
 
-    <div class="footer__bottom">
+    <div class="footer__bottom flex flex-col lg:flex-row gap-5 lg:justify-between">
       <p class="footer__copyright">
         © {{ date('Y') }}
 
@@ -152,6 +152,10 @@ $fullName = trim(
 
         Tous droits réservés.
       </p>
+      <div class="flex flex-col lg:flex-row gap-5">
+        <a href="/legal-notices">Mentions légales</a>
+        <a href="/privacy-policy">Politique de confidentialité</a>
+      </div>
     </div>
   </div>
 </footer>
