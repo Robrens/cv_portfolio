@@ -26,11 +26,15 @@
       @foreach ($experiences as $experience)
       <x-ui.timeline :period="$experience->period_label" :meta="$experience->employment_type"
         :title="$experience->title_label" :description="$experience->summary" :tags="$experience->technologies ?? []"
-        :href="$experience->has_details
-              ? '#experience-' . $experience->id
-              : null" />
+        :modal-id="$experience->has_details
+                ? 'experience-' . $experience->id
+                : null" />
       @endforeach
     </div>
+
+    @foreach ($experiences->filter->has_details as $experience)
+    <x-ui.experience-modal :experience="$experience" />
+    @endforeach
   </div>
 </section>
 @endif
