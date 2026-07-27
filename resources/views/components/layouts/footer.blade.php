@@ -72,7 +72,7 @@ $fullName = trim(
 
           @if ($workMethods->isNotEmpty())
           <li>
-            <a href="#{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}">Démarche</a>
+            <a href="{{ request()->routeIs('home') ? '#approach' : route('home') . '#approach' }}">Démarche</a>
           </li>
           @endif
 
@@ -84,7 +84,7 @@ $fullName = trim(
 
           @if ($hasContact)
           <li>
-            <a href="#{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}">Contact</a>
+            <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}">Contact</a>
           </li>
           @endif
         </ul>

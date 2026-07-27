@@ -108,14 +108,14 @@ $resumeUrl = $profile->resume_path
         @endif
 
         @if ($profile->passions_is_active)
-        <a href="#{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}" class="nav-link" :class="{ 'is-active': activeSection === 'passions' }"
+        <a href="{{ request()->routeIs('home') ? '#passions' : route('home') . '#passions' }}" class="nav-link" :class="{ 'is-active': activeSection === 'passions' }"
           @click="activeSection = 'passions'">
           Passions
         </a>
         @endif
 
         @if ($hasContact)
-        <a href="#{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}" class="nav-link" :class="{ 'is-active': activeSection === 'contact' }"
+        <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}" class="nav-link" :class="{ 'is-active': activeSection === 'contact' }"
           @click="activeSection = 'contact'">
           Contact
         </a>
