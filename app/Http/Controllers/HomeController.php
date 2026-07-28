@@ -52,6 +52,11 @@ class HomeController extends Controller
             ->get();
 
         $seoSetting = SeoSetting::query()->first();
+        $seoTitle = $seoSetting?->title
+            ?: "{$profile->first_name} {$profile->last_name} — {$profile->job_title}";
+
+        $seoDescription = $seoSetting?->description
+            ?: $profile->hero_description;
 
         return view('index', compact(
             'profile',
@@ -59,7 +64,8 @@ class HomeController extends Controller
             'experiences',
             'workMethods',
             'socialLinks',
-            'seoSetting'
+            'seoTitle',
+            'seoDescription',
         ));
     }
 }
