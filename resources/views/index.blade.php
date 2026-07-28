@@ -1,37 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
     @if (request()->routeIs('home'))
     <title>{{ $seoTitle }}</title>
 
     <meta name="description" content="{{ $seoDescription }}" />
+    <meta name="robots" content="index, follow" />
 
     <link rel="canonical" href="{{ route('home') }}" />
 
     <meta property="og:title" content="{{ $seoTitle }}" />
-
     <meta property="og:description" content="{{ $seoDescription }}" />
-
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ route('home') }}" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="{{ $profile->first_name }} {{ $profile->last_name }}" />
+    <meta property="og:image" content="{{ asset('images/portfolio-cover.jpg') }}" />
+    <meta property="og:image:alt" content="Portfolio de {{ $profile->first_name }} {{ $profile->last_name }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     @elseif (request()->routeIs('legal.mentions'))
-    <title>Mentions légales — {{ $profile->first_name }} {{ $profile->last_name }}</title>
+    <title>
+      Mentions légales — {{ $profile->first_name }} {{ $profile->last_name }}
+    </title>
+
     <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="{{ route('legal.mentions') }}" />
     @elseif (request()->routeIs('legal.privacy'))
     <title>
       Politique de confidentialité — {{ $profile->first_name }} {{ $profile->last_name }}
     </title>
-    <meta name="robots" content="noindex, follow" />
-    @endif @fonts
 
-    <!-- Styles / Scripts -->
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="{{ route('legal.privacy') }}" />
+    @endif
+
+    @fonts
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.ts']) @endif
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.ts'])
+    @endif
   </head>
 
   <body id="top">
