@@ -15,16 +15,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-backend:
-  name: Backend (PHP ${{ matrix.php-version }} / PostgreSQL 18)
-  runs-on: ubuntu-latest
-  environment: Development
-  timeout-minutes: 10
+  backend:
+    name: Backend (PHP ${{ matrix.php-version }} / PostgreSQL 18)
+    runs-on: ubuntu-latest
+    environment: Development
+    timeout-minutes: 10
 
-  strategy:
-    fail-fast: false
-    matrix:
-      php-version: ['8.3', '8.5']
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.3', '8.5']
 
     services:
       postgres:
