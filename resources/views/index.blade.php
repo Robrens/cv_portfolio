@@ -7,36 +7,47 @@
 
     @if (request()->routeIs('home'))
     <title>{{ $seoTitle }}</title>
-
+    
     <meta name="description" content="{{ $seoDescription }}" />
     <meta name="robots" content="index, follow" />
-
+    
     <link rel="canonical" href="{{ route('home') }}" />
-
+    
     <meta property="og:title" content="{{ $seoTitle }}" />
     <meta property="og:description" content="{{ $seoDescription }}" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ route('home') }}" />
     <meta property="og:locale" content="fr_FR" />
-    <meta property="og:site_name" content="{{ $profile->first_name }} {{ $profile->last_name }}" />
+    <meta property="og:site_name" content="{{ config('app.name') }}" />
+    
     <meta property="og:image" content="{{ asset('images/portfolio-cover.jpg') }}" />
     <meta property="og:image:alt" content="Portfolio de {{ $profile->first_name }} {{ $profile->last_name }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    
+    <script type="application/ld+json">
+      {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => $profile->first_name.' '.$profile->last_name,
+            'url' => route('home'),
+            'jobTitle' => $profile->job_title,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
     @elseif (request()->routeIs('legal.mentions'))
-    <title>
-      Mentions légales — {{ $profile->first_name }} {{ $profile->last_name }}
-    </title>
-
+    <title>Mentions légales — {{ config('app.name') }}</title>
+    
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="{{ route('legal.mentions') }}" />
     @elseif (request()->routeIs('legal.privacy'))
-    <title>
-      Politique de confidentialité — {{ $profile->first_name }} {{ $profile->last_name }}
-    </title>
-
+    <title>Politique de confidentialité — {{ config('app.name') }}</title>
+    
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="{{ route('legal.privacy') }}" />
+    @else
+    <title>Page introuvable — {{ config('app.name') }}</title>
+    
+    <meta name="robots" content="noindex, nofollow" />
     @endif
 
     @fonts
@@ -56,24 +67,24 @@
 
     <main>
       @if(request()->routeIs('home'))
-      <x-layouts.hero :profile="$profile" />
-      <x-layouts.about :profile="$profile" />
-      <x-layouts.skills :profile="$profile" :skill-categories="$skillCategories" />
+        <x-layouts.hero :profile="$profile" />
+        <x-layouts.about :profile="$profile" />
+        <x-layouts.skills :profile="$profile" :skill-categories="$skillCategories" />
 
-      <x-layouts.career :profile="$profile" :experiences="$experiences" />
+        <x-layouts.career :profile="$profile" :experiences="$experiences" />
 
-      <x-layouts.approach :profile="$profile" :work-methods="$workMethods" />
-
+        <x-layouts.approach :profile="$profile" :work-methods="$workMethods" />
       @if ($profile->passions_is_active)
-      <x-layouts.passions :profile="$profile" />
+        <x-layouts.passions :profile="$profile" />
       @endif
-      <x-layouts.contact :profile="$profile" />
-
+        <x-layouts.contact :profile="$profile" />
       @elseif(request()->routeIs('legal.mentions'))
-      <x-legal.legal-notices />
+        <x-legal.legal-notices />
       @elseif(request()->routeIs('legal.privacy'))
-      <x-legal.privacy-policy />
-      @else oups @endif
+        <x-legal.privacy-policy />
+      @else
+        oups
+      @endif
     </main>
 
     <x-layouts.footer
