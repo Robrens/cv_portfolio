@@ -90,8 +90,7 @@ class SeoController extends Controller
             );
         }
 
-        $image = Image::create(1200, 630)->fill('#0a182b');
-
+        $image = Image::createImage(1200, 630)->fill('#0a182b');
         $eyebrow = mb_strtoupper($profile->hero_eyebrow ?? '');
 
         $title = trim(implode(' ', array_filter([
@@ -153,23 +152,25 @@ class SeoController extends Controller
             filled($portraitPath)
             && Storage::disk('public')->exists($portraitPath)
         ) {
-            $portrait = Image::read(
+            $portrait = Image::decodeBinary(
                 Storage::disk('public')->get($portraitPath),
             );
 
             $portrait->cover(430, 580);
 
-            $image->place(
-                $portrait,
-                'bottom-right',
-                0,
-                0,
+            $image->insert(
+                image: $portrait,
+                x: 0,
+                y: 0,
+                alignment: 'bottom-right',
             );
         }
 
         Storage::disk('public')->put(
             $generatedPath,
-            $image->toJpeg(quality: 90)->toString(),
+            $image
+                ->encodeUsingMediaType('image/jpeg', quality: 90)
+                ->toString()
         );
     }
 }
