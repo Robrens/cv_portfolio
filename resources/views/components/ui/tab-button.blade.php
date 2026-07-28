@@ -9,7 +9,7 @@
   class="inline-flex items-center justify-center gap-2 rounded-button px-4 py-3 text-sm font-semibold transition-colors duration-150 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
 >
   @if ($icon)
-  <x-dynamic-component :component="$icon" class="h-5 w-5" />
+  <x-icons.icon :name="$icon" class="h-5 w-5" />
   @endif
 
   <span>{{ $label }}</span>
