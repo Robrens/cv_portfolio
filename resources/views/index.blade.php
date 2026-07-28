@@ -20,10 +20,13 @@
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="{{ config('app.name') }}" />
     
-    <meta property="og:image" content="{{ asset('images/portfolio-cover.jpg') }}" />
-    <meta property="og:image:alt" content="Portfolio de {{ $profile->first_name }} {{ $profile->last_name }}" />
+    <meta property="og:image" content="{{ Storage::disk('public')->url(
+          $profile->og_image ?: $profile->generated_og_image
+      ) }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Portfolio de {{ $profile->first_name }} {{ $profile->last_name }}" />
     
     <script type="application/ld+json">
       {!! json_encode([
