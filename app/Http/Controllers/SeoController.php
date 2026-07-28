@@ -13,7 +13,7 @@ class SeoController extends Controller
             'Allow: /',
             'Disallow: /dashboard',
             '',
-            'Sitemap: ' . route('seo.sitemap'),
+            'Sitemap: '.route('seo.sitemap'),
         ]);
 
         return response($content, 200)
