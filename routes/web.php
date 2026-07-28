@@ -18,3 +18,6 @@ Route::get('/robots.txt', [SeoController::class, 'robots'])
 
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])
     ->name('seo.sitemap');
+
+Route::get('/open-graph/hero.jpg', [SeoController::class, 'openGraphImage'])
+    ->name('seo.og-image');
