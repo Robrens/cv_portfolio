@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SeoSettings\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -42,6 +43,19 @@ class SeoSettingForm
                             ->rows(4)
                             ->maxLength(320)
                             ->columnSpanFull(),
+
+                        FileUpload::make('og_image')
+                            ->label('Image Open Graph personnalisée')
+                            ->image()
+                            ->disk('public')
+                            ->directory('profiles/open-graph')
+                            ->visibility('public')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(2048)
+                            ->helperText(
+                                'Facultatif. Format recommandé : 1200 × 630 px. '
+                                    .'Sans image, une version sera générée depuis le hero.'
+                            ),
                     ]),
             ]);
     }
