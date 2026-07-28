@@ -6,10 +6,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "lint": "eslint resources/js --max-warnings=20",
+    "lint": "eslint resources/js --max-warnings=0",
     "lint:fix": "eslint resources/js --fix",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format": "prettier \"resources/**/*.{js,ts,css,scss}\" \"*.{json,yml,yaml}\" \".github/**/*.{yml,yaml}\" --write",
+    "format:check": "prettier \"resources/**/*.{js,ts,css,scss}\" \"*.{json,yml,yaml}\" \".github/**/*.{yml,yaml}\" --check"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

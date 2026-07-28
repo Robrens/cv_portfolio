@@ -108,12 +108,15 @@ class ProfileForm
                             ->imageEditorAspectRatioOptions([
                                 '4:5',
                             ])
+                            ->automaticallyResizeImagesMode('cover')
+                            ->automaticallyResizeImagesToWidth('640')
+                            ->automaticallyResizeImagesToHeight('800')
+                            ->automaticallyUpscaleImagesWhenResizing(false)
                             ->acceptedFileTypes([
-                                'image/jpeg',
                                 'image/png',
                                 'image/webp',
                             ])
-                            ->maxSize(5 * 1024)
+                            ->maxSize(2 * 1024)
                             ->openable()
                             ->downloadable()
                             ->columnSpanFull(),

@@ -44,8 +44,11 @@
         <img
           src="{{ asset('storage/' . $profile->portrait_path) }}"
           alt="Portrait de {{ $profile->first_name }} {{ $profile->last_name }}"
+          width="640"
+          height="800"
           class="w-full object-cover shadow-card"
           fetchpriority="high"
+          decoding="async"
         />
       </div>
       @endif

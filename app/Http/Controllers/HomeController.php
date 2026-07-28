@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Experience;
 use App\Models\Profile;
+use App\Models\SeoSetting;
 use App\Models\SkillCategory;
 use App\Models\SocialLink;
 use App\Models\WorkMethod;
@@ -50,12 +51,21 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        $seoSetting = SeoSetting::query()->first();
+        $seoTitle = $seoSetting?->title
+            ?: "{$profile->first_name} {$profile->last_name} — {$profile->job_title}";
+
+        $seoDescription = $seoSetting?->description
+            ?: $profile->hero_description;
+
         return view('index', compact(
             'profile',
             'skillCategories',
             'experiences',
             'workMethods',
-            'socialLinks'
+            'socialLinks',
+            'seoTitle',
+            'seoDescription',
         ));
     }
 }

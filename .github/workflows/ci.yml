@@ -140,7 +140,7 @@ jobs:
         run: yarn eslint resources/js --max-warnings=0
 
       - name: Check frontend formatting
-        run: yarn prettier resources --check
+        run: yarn format:check
 
       - name: Build frontend assets
         run: yarn build
