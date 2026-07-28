@@ -44,10 +44,6 @@
     
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="{{ route('legal.privacy') }}" />
-    @else
-    <title>Page introuvable — {{ config('app.name') }}</title>
-    
-    <meta name="robots" content="noindex, nofollow" />
     @endif
 
     @fonts
@@ -82,8 +78,6 @@
         <x-legal.legal-notices />
       @elseif(request()->routeIs('legal.privacy'))
         <x-legal.privacy-policy />
-      @else
-        oups
       @endif
     </main>
 
