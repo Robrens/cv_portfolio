@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Experience;
 use App\Models\Profile;
 use App\Models\SkillCategory;
-use App\Models\WorkMethod;
 use App\Models\SocialLink;
+use App\Models\WorkMethod;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -15,11 +15,11 @@ class HomeController extends Controller
     {
         $profile = Profile::query()
             ->with([
-                'stats' => fn($query) => $query
+                'stats' => fn ($query) => $query
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
 
-                'passions' => fn($query) => $query
+                'passions' => fn ($query) => $query
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
             ])
@@ -28,7 +28,7 @@ class HomeController extends Controller
         $skillCategories = SkillCategory::query()
             ->where('is_active', true)
             ->with([
-                'skills' => fn($query) => $query
+                'skills' => fn ($query) => $query
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
             ])

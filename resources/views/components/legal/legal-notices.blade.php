@@ -1,13 +1,9 @@
 <div class="legal-page">
   <header class="legal-page__header">
     <div class="site-container">
-      <p class="subtitle text-brand-accent uppercase font-semibold">
-        Informations légales
-      </p>
+      <p class="subtitle text-brand-accent uppercase font-semibold">Informations légales</p>
 
-      <h1 class="section-title mt-4 text-heading">
-        Mentions légales
-      </h1>
+      <h1 class="section-title mt-4 text-heading">Mentions légales</h1>
 
       <p class="legal-page__intro">
         Informations relatives à l’édition et à l’hébergement de ce site.
@@ -17,7 +13,6 @@
 
   <div class="site-container">
     <div class="legal-page__content">
-
       <section class="legal-page__section" aria-labelledby="legal-publisher">
         <h2 id="legal-publisher">Éditeur du site</h2>
 
@@ -43,18 +38,15 @@
         </dl>
 
         <p>
-          Ce site est un portfolio personnel destiné à présenter le parcours,
-          les compétences et les réalisations professionnelles de son éditeur.
+          Ce site est un portfolio personnel destiné à présenter le parcours, les compétences et les
+          réalisations professionnelles de son éditeur.
         </p>
       </section>
 
       <section class="legal-page__section" aria-labelledby="legal-publication">
         <h2 id="legal-publication">Direction de la publication</h2>
 
-        <p>
-          Le directeur de la publication est
-          {{ config('legal.publisher.name') }}.
-        </p>
+        <p>Le directeur de la publication est {{ config('legal.publisher.name') }}.</p>
       </section>
 
       <section class="legal-page__section" aria-labelledby="legal-host">
@@ -67,20 +59,13 @@
           <strong>{{ config('legal.host.name') }}</strong>
 
           @if (config('legal.host.address'))
-          <br>
-          {{ config('legal.host.address') }}
-          @endif
-
-          @if (config('legal.host.phone'))
-          <br>
+          <br />
+          {{ config('legal.host.address') }} @endif @if (config('legal.host.phone'))
+          <br />
           Téléphone :
-          <a href="tel:{{ config('legal.host.phone') }}">
-            {{ config('legal.host.phone') }}
-          </a>
-          @endif
-
-          @if (config('legal.host.website'))
-          <br>
+          <a href="tel:{{ config('legal.host.phone') }}"> {{ config('legal.host.phone') }} </a>
+          @endif @if (config('legal.host.website'))
+          <br />
           Site internet :
           <a href="{{ config('legal.host.website') }}" target="_blank" rel="noopener noreferrer">
             {{ config('legal.host.website') }}
@@ -89,33 +74,29 @@
         </address>
         @else
         <p>
-          Les coordonnées de l’hébergeur seront renseignées avant la mise
-          en production du site.
+          Les coordonnées de l’hébergeur seront renseignées avant la mise en production du site.
         </p>
         @endif
       </section>
 
       <section class="legal-page__section" aria-labelledby="legal-intellectual-property">
-        <h2 id="legal-intellectual-property">
-          Propriété intellectuelle
-        </h2>
+        <h2 id="legal-intellectual-property">Propriété intellectuelle</h2>
 
         <p>
-          Sauf indication contraire, les textes, développements, éléments
-          graphiques et autres contenus originaux présents sur ce site sont
-          la propriété de {{ config('legal.publisher.name') }}.
+          Sauf indication contraire, les textes, développements, éléments graphiques et autres
+          contenus originaux présents sur ce site sont la propriété de {{
+          config('legal.publisher.name') }}.
         </p>
 
         <p>
-          Toute reproduction, représentation, adaptation ou réutilisation
-          totale ou partielle de ces contenus sans autorisation préalable
-          est interdite, en dehors des utilisations autorisées par la loi.
+          Toute reproduction, représentation, adaptation ou réutilisation totale ou partielle de ces
+          contenus sans autorisation préalable est interdite, en dehors des utilisations autorisées
+          par la loi.
         </p>
 
         <p>
-          Les marques, logos, noms de produits, technologies et services
-          mentionnés sur ce site restent la propriété de leurs titulaires
-          respectifs.
+          Les marques, logos, noms de produits, technologies et services mentionnés sur ce site
+          restent la propriété de leurs titulaires respectifs.
         </p>
       </section>
 
@@ -123,9 +104,9 @@
         <h2 id="legal-links">Liens externes</h2>
 
         <p>
-          Ce site peut contenir des liens vers des sites ou services externes.
-          L’éditeur ne contrôle pas leur contenu, leur disponibilité ni leurs
-          pratiques en matière de protection des données.
+          Ce site peut contenir des liens vers des sites ou services externes. L’éditeur ne contrôle
+          pas leur contenu, leur disponibilité ni leurs pratiques en matière de protection des
+          données.
         </p>
       </section>
 
@@ -133,14 +114,14 @@
         <h2 id="legal-liability">Responsabilité</h2>
 
         <p>
-          Les informations présentes sur ce site sont fournies à titre
-          informatif. L’éditeur s’efforce de les maintenir exactes et à jour,
-          sans pouvoir garantir en permanence leur exhaustivité.
+          Les informations présentes sur ce site sont fournies à titre informatif. L’éditeur
+          s’efforce de les maintenir exactes et à jour, sans pouvoir garantir en permanence leur
+          exhaustivité.
         </p>
 
         <p>
-          L’utilisateur reste responsable de l’usage qu’il fait des
-          informations et des liens proposés sur le site.
+          L’utilisateur reste responsable de l’usage qu’il fait des informations et des liens
+          proposés sur le site.
         </p>
       </section>
 
@@ -148,11 +129,9 @@
         <h2 id="legal-data">Données personnelles</h2>
 
         <p>
-          Les traitements susceptibles d’être réalisés lors de la consultation
-          du site sont décrits dans la
-          <a href="{{ route('legal.privacy') }}">
-            politique de confidentialité
-          </a>.
+          Les traitements susceptibles d’être réalisés lors de la consultation du site sont décrits
+          dans la
+          <a href="{{ route('legal.privacy') }}"> politique de confidentialité </a>.
         </p>
       </section>
 
@@ -160,8 +139,8 @@
         <h2 id="legal-contact">Contact</h2>
 
         <p>
-          Pour toute question concernant le site ou son contenu, vous pouvez
-          contacter l’éditeur à l’adresse suivante :
+          Pour toute question concernant le site ou son contenu, vous pouvez contacter l’éditeur à
+          l’adresse suivante :
         </p>
 
         <p>

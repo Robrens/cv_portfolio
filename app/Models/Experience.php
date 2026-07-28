@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Experience extends Model
 {
@@ -68,7 +68,7 @@ class Experience extends Model
     protected function titleLabel(): Attribute
     {
         return Attribute::get(
-            fn(): string => "{$this->job_title} • {$this->company_name}",
+            fn (): string => "{$this->job_title} • {$this->company_name}",
         );
     }
 
@@ -103,7 +103,7 @@ class Experience extends Model
     protected function hasDetails(): Attribute
     {
         return Attribute::get(
-            fn(): bool => filled($this->details)
+            fn (): bool => filled($this->details)
                 || filled($this->responsibilities)
                 || filled($this->achievements),
         );

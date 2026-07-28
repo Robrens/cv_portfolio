@@ -1,13 +1,6 @@
-@props([
-'profile',
-])
-
-@if (
-filled($profile->contact_title)
-|| filled($profile->contact_description)
-|| filled($profile->contact_button_label)
-|| filled($profile->email)
-)
+@props([ 'profile', ]) @if ( filled($profile->contact_title) ||
+filled($profile->contact_description) || filled($profile->contact_button_label) ||
+filled($profile->email) )
 <section class="section contact-cta-section" id="contact">
   <div class="site-container">
     <div class="contact-cta">
@@ -18,15 +11,9 @@ filled($profile->contact_title)
 
         <div>
           @if ($profile->contact_title)
-          <h2 class="contact-cta__title">
-            {{ $profile->contact_title }}
-          </h2>
-          @endif
-
-          @if ($profile->contact_description)
-          <p class="contact-cta__text">
-            {{ $profile->contact_description }}
-          </p>
+          <h2 class="contact-cta__title">{{ $profile->contact_title }}</h2>
+          @endif @if ($profile->contact_description)
+          <p class="contact-cta__text">{{ $profile->contact_description }}</p>
           @endif
         </div>
       </div>

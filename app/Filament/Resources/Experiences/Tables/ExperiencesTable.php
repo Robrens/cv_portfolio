@@ -29,16 +29,14 @@ class ExperiencesTable
                 TextColumn::make('start_year')
                     ->label('Début')
                     ->formatStateUsing(
-                        fn(int|string $state, $record): string =>
-                        self::formatPeriod($record->start_month, $state),
+                        fn (int|string $state, $record): string => self::formatPeriod($record->start_month, $state),
                     )
                     ->sortable(),
 
                 TextColumn::make('end_year')
                     ->label('Fin')
                     ->formatStateUsing(
-                        fn(int|string|null $state, $record): string =>
-                        $record->is_current
+                        fn (int|string|null $state, $record): string => $record->is_current
                             ? 'Aujourd’hui'
                             : self::formatPeriod($record->end_month, $state),
                     )
@@ -105,6 +103,6 @@ class ExperiencesTable
             return (string) $year;
         }
 
-        return ($months[(int) $month] ?? '') . ' ' . $year;
+        return ($months[(int) $month] ?? '').' '.$year;
     }
 }

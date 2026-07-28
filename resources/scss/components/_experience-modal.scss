@@ -37,11 +37,7 @@
     padding: 2rem;
 
     background:
-      radial-gradient(
-        circle at 85% 20%,
-        rgb(37 99 235 / 0.18),
-        transparent 35%
-      ),
+      radial-gradient(circle at 85% 20%, rgb(37 99 235 / 0.18), transparent 35%),
       var(--color-brand-primary);
     color: var(--color-invert);
 

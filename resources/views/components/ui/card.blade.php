@@ -1,9 +1,4 @@
-@props([
-'icon' => null,
-'title' => null,
-'subtitle' => null,
-'description' => null,
-])
+@props([ 'icon' => null, 'title' => null, 'subtitle' => null, 'description' => null, ])
 
 <div class="card">
   @if ($icon)

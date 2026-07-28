@@ -6,12 +6,7 @@
       rgba(37, 99, 235, 0.12) 25%,
       rgba(15, 23, 42, 0) 55%
     ),
-    linear-gradient(
-      135deg,
-      #020617 0%,
-      #0f172a 45%,
-      #020617 100%
-    );
+    linear-gradient(135deg, #020617 0%, #0f172a 45%, #020617 100%);
 
   .hero-info-list {
     display: grid;
@@ -76,19 +71,9 @@
       @media (min-width: 1024px) {
         max-width: none;
       }
-      -webkit-mask-image: linear-gradient(
-        to bottom,
-        black 0%,
-        black 75%,
-        transparent 100%
-      );
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 75%, transparent 100%);
 
-      mask-image: linear-gradient(
-        to bottom,
-        black 0%,
-        black 75%,
-        transparent 100%
-      );
+      mask-image: linear-gradient(to bottom, black 0%, black 75%, transparent 100%);
     }
   }
 }

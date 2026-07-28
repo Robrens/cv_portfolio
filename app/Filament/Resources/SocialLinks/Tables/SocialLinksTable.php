@@ -24,7 +24,7 @@ class SocialLinksTable
                 TextColumn::make('url')
                     ->label('Lien')
                     ->limit(50)
-                    ->url(fn($record): string => $record->url)
+                    ->url(fn ($record): string => $record->url)
                     ->openUrlInNewTab()
                     ->toggleable(),
 
