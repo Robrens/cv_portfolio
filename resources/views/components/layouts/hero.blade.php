@@ -26,11 +26,7 @@
 
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           @if ($profile->resume_path)
-          <a
-            href="{{ asset('storage/' . $profile->resume_path) }}"
-            class="btn btn-primary"
-            download="BAUDU_CV.pdf"
-          >
+          <a href="{{ asset('storage/' . $profile->resume_path) }}" class="btn btn-primary" download="BAUDU_CV.pdf">
             Télécharger mon CV
           </a>
           @endif
@@ -41,12 +37,9 @@
 
       @if ($profile->portrait_path)
       <div class="hero-portrait order-3 lg:order-2">
-        <img
-          src="{{ asset('storage/' . $profile->portrait_path) }}"
-          alt="Portrait de {{ $profile->first_name }} {{ $profile->last_name }}"
-          class="w-full object-cover shadow-card"
-          fetchpriority="high"
-        />
+        <img src="{{ asset('storage/' . $profile->portrait_path) }}"
+          alt="Portrait de {{ $profile->first_name }} {{ $profile->last_name }}" width="640" height="800"
+          class="w-full object-cover shadow-card" fetchpriority="high" decoding="async" />
       </div>
       @endif
 
