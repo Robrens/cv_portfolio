@@ -5,25 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     @if (request()->routeIs('home'))
-    <title>
-      {{ $seoSetting?->title ?: "{$profile->first_name} {$profile->last_name} —
-      {$profile->job_title}" }}
-    </title>
+    <title>{{ $seoTitle }}</title>
 
-    <meta
-      name="description"
-      content="{{ $seoSetting?->description ?: $profile->hero_description }}"
-    />
+    <meta name="description" content="{{ $seoDescription }}" />
 
     <link rel="canonical" href="{{ route('home') }}" />
 
-    <meta property="og:title" content="{{ $seoSetting?->title ?: " {$profile- />
-    first_name} {$profile->last_name} — {$profile->job_title}" }}" />
+    <meta property="og:title" content="{{ $seoTitle }}" />
 
-    <meta
-      property="og:description"
-      content="{{ $seoSetting?->description ?: $profile->hero_description }}"
-    />
+    <meta property="og:description" content="{{ $seoDescription }}" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ route('home') }}" />
