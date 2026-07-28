@@ -22,13 +22,7 @@
       aria-label="Catégories de compétences"
     >
       @foreach ($skillCategories as $category)
-      <x-ui.tab-button
-        :key="$category->slug"
-        :label="$category->name"
-        :icon="$category->icon
-              ? 'heroicon-o-' . $category->icon
-              : null"
-      />
+      <x-ui.tab-button :key="$category->slug" :label="$category->name" :icon="$category->icon" />
       @endforeach
     </nav>
 
@@ -37,18 +31,12 @@
       <div
         x-show="activeTab === @js($category->slug)"
         x-transition.opacity.duration.150ms
+        x-cloak
         class="grid gap-6 lg:grid-cols-[0.8fr_2fr]"
-        @if
-        (!
-        $loop-
       >
-        first) x-cloak @endif >
         <div class="rounded-card bg-white/3 p-6">
           @if ($category->icon)
-          <x-dynamic-component
-            :component="'heroicon-o-' . $category->icon"
-            class="h-10 w-10 text-brand-accent"
-          />
+          <x-icons.icon :name="$category->icon" class="h-10 w-10 text-brand-accent" />
           @endif
 
           <h3 class="mt-5 text-lg font-bold text-white">{{ $category->name }}</h3>
@@ -61,12 +49,7 @@
         @if ($category->skills->isNotEmpty())
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           @foreach ($category->skills as $skill)
-          <x-ui.tech-card
-            :name="$skill->name"
-            :icon="$skill->icon
-                      ? 'heroicon-o-' . $skill->icon
-                      : null"
-          />
+          <x-ui.tech-card :name="$skill->name" :icon="$skill->icon" />
           @endforeach
         </div>
         @else
