@@ -9,6 +9,7 @@ use App\Models\SkillCategory;
 use App\Models\SocialLink;
 use App\Models\WorkMethod;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -58,6 +59,10 @@ class HomeController extends Controller
         $seoDescription = $seoSetting?->description
             ?: $profile->hero_description;
 
+        $ogImageUrl = filled($seoSetting?->og_image)
+            ? Storage::url($seoSetting->og_image)
+            : route('seo.og-image');
+
         return view('index', compact(
             'profile',
             'skillCategories',
@@ -66,6 +71,7 @@ class HomeController extends Controller
             'socialLinks',
             'seoTitle',
             'seoDescription',
+            'ogImageUrl',
         ));
     }
 }
