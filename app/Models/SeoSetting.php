@@ -9,5 +9,6 @@ class SeoSetting extends Model
     protected $fillable = [
         'title',
         'description',
+        'og_image',
     ];
 }
