@@ -4,8 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>CV Baudu Jean-Baptiste</title>
-    @fonts
+    @if (request()->routeIs('home'))
+    <title>{{ $seoTitle }}</title>
+
+    <meta name="description" content="{{ $seoDescription }}" />
+
+    <link rel="canonical" href="{{ route('home') }}" />
+
+    <meta property="og:title" content="{{ $seoTitle }}" />
+
+    <meta property="og:description" content="{{ $seoDescription }}" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ route('home') }}" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="{{ $profile->first_name }} {{ $profile->last_name }}" />
+    @elseif (request()->routeIs('legal.mentions'))
+    <title>Mentions légales — {{ $profile->first_name }} {{ $profile->last_name }}</title>
+    <meta name="robots" content="noindex, follow" />
+    @elseif (request()->routeIs('legal.privacy'))
+    <title>
+      Politique de confidentialité — {{ $profile->first_name }} {{ $profile->last_name }}
+    </title>
+    <meta name="robots" content="noindex, follow" />
+    @endif @fonts
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
