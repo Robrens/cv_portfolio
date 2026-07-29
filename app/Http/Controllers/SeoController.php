@@ -6,6 +6,7 @@ use App\Models\Profile;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Encoders\JpegEncoder;
 use RuntimeException;
 
 class SeoController extends Controller
@@ -49,7 +50,10 @@ class SeoController extends Controller
     {
         $profile = Profile::query()->firstOrFail();
 
+        $generatorVersion = '2';
+
         $cacheKey = sha1(implode('|', [
+            $generatorVersion,
             $profile->updated_at?->timestamp,
             $profile->first_name,
             $profile->last_name,
@@ -86,11 +90,12 @@ class SeoController extends Controller
 
         if (! is_file($regularFont) || ! is_file($boldFont)) {
             throw new RuntimeException(
-                'Les polices nécessaires à l’image Open Graph sont absentes.',
+                "Les polices nécessaires à l'image Open Graph sont absentes.",
             );
         }
 
         $image = Image::createImage(1200, 630)->fill('#0a182b');
+
         $eyebrow = mb_strtoupper($profile->hero_eyebrow ?? '');
 
         $title = trim(implode(' ', array_filter([
@@ -166,11 +171,19 @@ class SeoController extends Controller
             );
         }
 
-        Storage::disk('public')->put(
-            $generatedPath,
-            $image
-                ->encodeUsingMediaType('image/jpeg', quality: 90)
-                ->toString()
+        $encodedImage = $image->encode(
+            new JpegEncoder(quality: 90),
         );
+
+        $written = Storage::disk('public')->put(
+            $generatedPath,
+            $encodedImage->toString(),
+        );
+
+        if (! $written) {
+            throw new RuntimeException(
+                "Impossible d'écrire l'image Open Graph.",
+            );
+        }
     }
 }
