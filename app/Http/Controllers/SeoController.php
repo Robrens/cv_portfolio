@@ -120,7 +120,7 @@ class SeoController extends Controller
         $image->text(
             wordwrap($title, 28),
             70,
-            145,
+            250,
             function ($font) use ($boldFont): void {
                 $font->filename($boldFont);
                 $font->size(52);
