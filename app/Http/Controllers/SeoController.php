@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\Encoders\JpegEncoder;
+use Intervention\Image\Laravel\Facades\Image;
 use RuntimeException;
 
 class SeoController extends Controller
