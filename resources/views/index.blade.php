@@ -12,6 +12,14 @@
     <meta name="robots" content="index, follow" />
     
     <link rel="canonical" href="{{ route('home') }}" />
+
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="theme-color" content="#040819">
     
     <meta property="og:title" content="{{ $seoTitle }}" />
     <meta property="og:description" content="{{ $seoDescription }}" />
@@ -20,10 +28,11 @@
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="{{ config('app.name') }}" />
     
-    <meta property="og:image" content="{{ asset('images/portfolio-cover.jpg') }}" />
-    <meta property="og:image:alt" content="Portfolio de {{ $profile->first_name }} {{ $profile->last_name }}" />
+    <meta property="og:image" content="{{ $ogImageUrl }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Portfolio de {{ $profile->first_name }} {{ $profile->last_name }}" />
     
     <script type="application/ld+json">
       {!! json_encode([
