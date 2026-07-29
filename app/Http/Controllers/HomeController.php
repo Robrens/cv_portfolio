@@ -58,6 +58,10 @@ class HomeController extends Controller
         $seoDescription = $seoSetting?->description
             ?: $profile->hero_description;
 
+        $ogImageUrl = filled($seoSetting?->og_image)
+            ? asset('storage/'.ltrim($seoSetting->og_image, '/'))
+            : route('seo.og-image');
+
         return view('index', compact(
             'profile',
             'skillCategories',
@@ -66,6 +70,7 @@ class HomeController extends Controller
             'socialLinks',
             'seoTitle',
             'seoDescription',
+            'ogImageUrl',
         ));
     }
 }
