@@ -123,9 +123,9 @@ class SeoController extends Controller
             250,
             function ($font) use ($boldFont): void {
                 $font->filename($boldFont);
-                $font->size(52);
+                $font->size(50);
                 $font->color('#f8fafc');
-                $font->lineHeight(1.25);
+                $font->lineHeight(1.50);
             },
         );
 
@@ -165,7 +165,7 @@ class SeoController extends Controller
 
             $image->insert(
                 image: $portrait,
-                x: 0,
+                x: 35,
                 y: 0,
                 alignment: 'bottom-right',
             );
