@@ -84,6 +84,7 @@ jobs:
 
     env:
       COMMIT_SHA: ${{ github.sha }}
+      RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
@@ -318,11 +319,12 @@ jobs:
 
           deploy_path="$1"
           commit_sha="$2"
-          healthcheck_url="$3"
+          release_id="$3"
+          healthcheck_url="$4"
 
           archive="/tmp/cv-portfolio-${commit_sha}.tar.gz"
           releases_path="${deploy_path}/releases"
-          release_path="${releases_path}/${commit_sha}"
+          release_path="${releases_path}/${release_id}"
           current_link="${deploy_path}/current"
           next_link="${deploy_path}/current.next"
           shared_env="${deploy_path}/shared/.env"
