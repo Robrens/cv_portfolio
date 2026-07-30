@@ -133,15 +133,11 @@
         <h2 id="privacy-audience">Mesure d’audience</h2>
 
         <p>
-          Aucun outil de mesure d’audience ni dispositif publicitaire n’est actuellement intégré à
-          l’application.
-        </p>
-
-        <p>
-          Une mesure statistique respectueuse de la vie privée pourra être mise en place
-          ultérieurement au niveau de l’hébergement. Cette politique sera alors actualisée pour
-          préciser les données utilisées, leur durée de conservation et les éventuels traceurs
-          employés.
+          Le site réalise une mesure d’audience limitée au nombre de visiteurs uniques quotidiens. Aucun cookie, service tiers ou
+          identifiant permanent n’est utilisé à cette fin. L’adresse IP est traitée brièvement par le serveur, réduite à un
+          préfixe réseau puis transformée en une empreinte non réversible valable uniquement pour la journée. L’adresse IP
+          complète n’est pas enregistrée. Les empreintes temporaires sont supprimées après 48 heures et seules les statistiques
+          quotidiennes agrégées sont conservées.
         </p>
       </section>
 
