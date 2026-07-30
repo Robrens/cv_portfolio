@@ -313,6 +313,7 @@ jobs:
             bash -s -- \
               "$DEPLOY_PATH" \
               "$COMMIT_SHA" \
+              "$RELEASE_ID" \
               "$HEALTHCHECK_URL" <<'REMOTE_SCRIPT'
           set -euo pipefail
           umask 027
