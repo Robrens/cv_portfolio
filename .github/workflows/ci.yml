@@ -2,9 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [master, develop]
+    branches:
+      - master
+      - develop
   pull_request:
-    branches: [master, develop]
+    branches:
+      - master
+      - develop
   workflow_dispatch:
 
 permissions:
@@ -19,7 +23,7 @@ jobs:
     name: Backend (PHP ${{ matrix.php-version }} / PostgreSQL 17)
     runs-on: ubuntu-latest
     environment: Development
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     strategy:
       fail-fast: false
@@ -55,22 +59,42 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Check CI configuration
         shell: bash
         run: |
-          if [[ -z "$DB_CONNECTION" || -z "$DB_HOST" || -z "$DB_PORT" ]]; then
-            echo "::error::Missing DB_CONNECTION, DB_HOST or DB_PORT GitHub Actions variable."
-            exit 1
-          fi
+          set -euo pipefail
 
-          if [[ -z "$DB_DATABASE" || -z "$DB_USERNAME" || -z "$DB_PASSWORD" ]]; then
-            echo "::error::Missing DB_DATABASE, DB_USERNAME or DB_PASSWORD GitHub Actions secret."
-            exit 1
-          fi
+          required_variables=(
+            DB_CONNECTION
+            DB_HOST
+            DB_PORT
+            DB_DATABASE
+            DB_USERNAME
+            DB_PASSWORD
+          )
+
+          for variable in "${required_variables[@]}"; do
+            if [[ -z "${!variable:-}" ]]; then
+              echo "::error::Missing required CI value: ${variable}"
+              exit 1
+            fi
+          done
 
           if [[ "$DB_CONNECTION" != "pgsql" ]]; then
-            echo "::error::DB_CONNECTION must be pgsql, got '$DB_CONNECTION'."
+            echo "::error::DB_CONNECTION must be pgsql."
+            exit 1
+          fi
+
+          if [[ "$DB_HOST" != "127.0.0.1" && "$DB_HOST" != "localhost" ]]; then
+            echo "::error::DB_HOST must target the local CI service."
+            exit 1
+          fi
+
+          if [[ "$DB_PORT" != 5432 ]]; then
+            echo "::error::DB_PORT must be 5432 in CI."
             exit 1
           fi
 
@@ -78,20 +102,32 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, gd, fileinfo
           coverage: none
           tools: composer:v2
 
       - name: Prepare Laravel
+        shell: bash
         run: |
+          set -euo pipefail
+
           cp .env.example .env
-          mkdir -p storage/framework/{cache/data,sessions,views} bootstrap/cache
+
+          mkdir -p \
+            storage/framework/cache/data \
+            storage/framework/sessions \
+            storage/framework/views \
+            bootstrap/cache
 
       - name: Validate Composer files
         run: composer validate --strict
 
       - name: Install PHP dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
+        run: >-
+          composer install
+          --no-interaction
+          --prefer-dist
+          --no-progress
 
       - name: Generate application key
         run: php artisan key:generate
@@ -102,18 +138,32 @@ jobs:
       - name: Run database migrations
         run: php artisan migrate:fresh --force
 
-      - name: Verify PostgreSQL test connection
+      - name: Verify PostgreSQL connection
+        shell: bash
         run: |
-          php artisan db:show --database=pgsql
+          set -euo pipefail
+
           php -r '
           require "vendor/autoload.php";
+
           $app = require "bootstrap/app.php";
-          $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-          $driver = Illuminate\Support\Facades\DB::connection()->getDriverName();
+
+          $app
+              ->make(Illuminate\Contracts\Console\Kernel::class)
+              ->bootstrap();
+
+          $driver = Illuminate\Support\Facades\DB::connection()
+              ->getDriverName();
+
           if ($driver !== "pgsql") {
-              fwrite(STDERR, "Expected pgsql, got ".$driver.PHP_EOL);
+              fwrite(
+                  STDERR,
+                  "Expected pgsql, got ".$driver.PHP_EOL
+              );
+
               exit(1);
           }
+
           echo "Tests use PostgreSQL.".PHP_EOL;
           '
 
@@ -128,6 +178,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Enable Corepack
         run: corepack enable
@@ -152,14 +204,20 @@ jobs:
 
   master-security:
     name: Dependency audit
-    if: github.ref == 'refs/heads/master' || github.base_ref == 'master'
-    needs: [backend, frontend]
+    if: >-
+      github.ref == 'refs/heads/master' ||
+      github.base_ref == 'master'
+    needs:
+      - backend
+      - frontend
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
