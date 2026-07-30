@@ -472,6 +472,29 @@ jobs:
               "${shared_storage}/logs/laravel.log" ||
               true
 
+            echo "Recent PHP-FPM log:"
+            sudo -n journalctl \
+              -u php8.4-fpm \
+              --since "5 minutes ago" \
+              --no-pager ||
+              true
+
+            echo "Recent Nginx error log:"
+            sudo -n tail -n 100 \
+              /var/log/nginx/error.log ||
+              true
+
+            echo "Release environment checks:"
+            ls -la \
+              "$current_link/.env" \
+              "$current_link/vendor/autoload.php" \
+              "$current_link/bootstrap/cache" ||
+              true
+
+            echo "Resolved release paths:"
+            readlink -f "$current_link/.env" || true
+            readlink -f "$current_link/vendor/autoload.php" || true
+
             echo "Response body:"
             sed -n '1,80p' "$healthcheck_body" || true
 
