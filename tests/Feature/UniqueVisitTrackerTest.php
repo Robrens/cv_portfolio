@@ -11,140 +11,142 @@ use Tests\TestCase;
 
 class UniqueVisitTrackerTest extends TestCase
 {
-  use RefreshDatabase;
+    use RefreshDatabase;
 
-  const TIME_ZONE="Europe/Paris";
-  const EXEMPLE_DATE="2026-07-30";
-  const REQUESTED_IP="203.0.113.10";
+    const TIME_ZONE = 'Europe/Paris';
 
-  protected function setUp(): void
-  {
-    parent::setUp();
+    const EXEMPLE_DATE = '2026-07-30';
 
-    config()->set('analytics.enabled', true);
-    config()->set(
-      'analytics.hash_key',
-      'test-only-analytics-key-that-is-not-used-in-production',
-    );
-    config()->set('analytics.timezone', self::TIME_ZONE);
+    const REQUESTED_IP = '203.0.113.10';
 
-    CarbonImmutable::setTestNow(
-      CarbonImmutable::parse(
-        '2026-07-30 12:00:00',
-        self::TIME_ZONE,
-      ),
-    );
-  }
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-  protected function tearDown(): void
-  {
-    CarbonImmutable::setTestNow();
+        config()->set('analytics.enabled', true);
+        config()->set(
+            'analytics.hash_key',
+            'test-only-analytics-key-that-is-not-used-in-production',
+        );
+        config()->set('analytics.timezone', self::TIME_ZONE);
 
-    parent::tearDown();
-  }
+        CarbonImmutable::setTestNow(
+            CarbonImmutable::parse(
+                '2026-07-30 12:00:00',
+                self::TIME_ZONE,
+            ),
+        );
+    }
 
-  public function test_same_network_is_counted_once_during_same_day(): void
-  {
-    $tracker = app(UniqueVisitTracker::class);
+    protected function tearDown(): void
+    {
+        CarbonImmutable::setTestNow();
 
-    $firstRequest = $this->requestFromIp(self::REQUESTED_IP);
-    $secondRequest = $this->requestFromIp('203.0.113.42');
+        parent::tearDown();
+    }
 
-    $this->assertTrue($tracker->record($firstRequest));
-    $this->assertFalse($tracker->record($secondRequest));
+    public function test_same_network_is_counted_once_during_same_day(): void
+    {
+        $tracker = app(UniqueVisitTracker::class);
 
-    $this->assertDatabaseCount('daily_visitors', 1);
+        $firstRequest = $this->requestFromIp(self::REQUESTED_IP);
+        $secondRequest = $this->requestFromIp('203.0.113.42');
 
-    $this->assertDatabaseHas('daily_visit_statistics', [
-      'visited_on' => self::EXEMPLE_DATE,
-      'unique_visitors' => 1,
-    ]);
-  }
+        $this->assertTrue($tracker->record($firstRequest));
+        $this->assertFalse($tracker->record($secondRequest));
 
-  public function test_different_networks_are_counted_separately(): void
-  {
-    $tracker = app(UniqueVisitTracker::class);
+        $this->assertDatabaseCount('daily_visitors', 1);
 
-    $tracker->record($this->requestFromIp(self::REQUESTED_IP));
-    $tracker->record($this->requestFromIp('198.51.100.20'));
+        $this->assertDatabaseHas('daily_visit_statistics', [
+            'visited_on' => self::EXEMPLE_DATE,
+            'unique_visitors' => 1,
+        ]);
+    }
 
-    $this->assertDatabaseCount('daily_visitors', 2);
+    public function test_different_networks_are_counted_separately(): void
+    {
+        $tracker = app(UniqueVisitTracker::class);
 
-    $this->assertDatabaseHas('daily_visit_statistics', [
-      'visited_on' => self::EXEMPLE_DATE,
-      'unique_visitors' => 2,
-    ]);
-  }
+        $tracker->record($this->requestFromIp(self::REQUESTED_IP));
+        $tracker->record($this->requestFromIp('198.51.100.20'));
 
-  public function test_fingerprint_changes_each_day(): void
-  {
-    $tracker = app(UniqueVisitTracker::class);
-    $request = $this->requestFromIp(self::REQUESTED_IP);
+        $this->assertDatabaseCount('daily_visitors', 2);
 
-    $tracker->record($request);
+        $this->assertDatabaseHas('daily_visit_statistics', [
+            'visited_on' => self::EXEMPLE_DATE,
+            'unique_visitors' => 2,
+        ]);
+    }
 
-    CarbonImmutable::setTestNow(
-      CarbonImmutable::parse(
-        '2026-07-31 12:00:00',
-        self::TIME_ZONE,
-      ),
-    );
+    public function test_fingerprint_changes_each_day(): void
+    {
+        $tracker = app(UniqueVisitTracker::class);
+        $request = $this->requestFromIp(self::REQUESTED_IP);
 
-    $tracker->record($request);
+        $tracker->record($request);
 
-    $this->assertDatabaseCount('daily_visitors', 2);
+        CarbonImmutable::setTestNow(
+            CarbonImmutable::parse(
+                '2026-07-31 12:00:00',
+                self::TIME_ZONE,
+            ),
+        );
 
-    $this->assertDatabaseHas('daily_visit_statistics', [
-      'visited_on' => self::EXEMPLE_DATE,
-      'unique_visitors' => 1,
-    ]);
+        $tracker->record($request);
 
-    $this->assertDatabaseHas('daily_visit_statistics', [
-      'visited_on' => '2026-07-31',
-      'unique_visitors' => 1,
-    ]);
-  }
+        $this->assertDatabaseCount('daily_visitors', 2);
 
-  public function test_raw_ip_address_is_never_stored(): void
-  {
-    $tracker = app(UniqueVisitTracker::class);
+        $this->assertDatabaseHas('daily_visit_statistics', [
+            'visited_on' => self::EXEMPLE_DATE,
+            'unique_visitors' => 1,
+        ]);
 
-    $tracker->record(
-      $this->requestFromIp(self::REQUESTED_IP),
-    );
+        $this->assertDatabaseHas('daily_visit_statistics', [
+            'visited_on' => '2026-07-31',
+            'unique_visitors' => 1,
+        ]);
+    }
 
-    $storedValues = DB::table('daily_visitors')
-      ->first();
+    public function test_raw_ip_address_is_never_stored(): void
+    {
+        $tracker = app(UniqueVisitTracker::class);
 
-    $this->assertNotNull($storedValues);
-    $this->assertNotSame(
-      self::REQUESTED_IP,
-      $storedValues->fingerprint,
-    );
-    $this->assertSame(64, strlen($storedValues->fingerprint));
-  }
+        $tracker->record(
+            $this->requestFromIp(self::REQUESTED_IP),
+        );
 
-  public function test_tracking_is_disabled_without_hash_key(): void
-  {
-    config()->set('analytics.hash_key', null);
+        $storedValues = DB::table('daily_visitors')
+            ->first();
 
-    $recorded = app(UniqueVisitTracker::class)->record(
-      $this->requestFromIp(self::REQUESTED_IP),
-    );
+        $this->assertNotNull($storedValues);
+        $this->assertNotSame(
+            self::REQUESTED_IP,
+            $storedValues->fingerprint,
+        );
+        $this->assertSame(64, strlen($storedValues->fingerprint));
+    }
 
-    $this->assertFalse($recorded);
-    $this->assertDatabaseCount('daily_visitors', 0);
-    $this->assertDatabaseCount('daily_visit_statistics', 0);
-  }
+    public function test_tracking_is_disabled_without_hash_key(): void
+    {
+        config()->set('analytics.hash_key', null);
 
-  private function requestFromIp(string $ipAddress): Request
-  {
-    return Request::create(
-      uri: '/',
-      method: 'GET',
-      server: [
-        'REMOTE_ADDR' => $ipAddress,
-      ],
-    );
-  }
+        $recorded = app(UniqueVisitTracker::class)->record(
+            $this->requestFromIp(self::REQUESTED_IP),
+        );
+
+        $this->assertFalse($recorded);
+        $this->assertDatabaseCount('daily_visitors', 0);
+        $this->assertDatabaseCount('daily_visit_statistics', 0);
+    }
+
+    private function requestFromIp(string $ipAddress): Request
+    {
+        return Request::create(
+            uri: '/',
+            method: 'GET',
+            server: [
+                'REMOTE_ADDR' => $ipAddress,
+            ],
+        );
+    }
 }

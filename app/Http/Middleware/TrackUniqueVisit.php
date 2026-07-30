@@ -9,21 +9,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TrackUniqueVisit
 {
-  public function __construct(
-    private readonly UniqueVisitTracker $tracker,
-  ) {}
+    public function __construct(
+        private readonly UniqueVisitTracker $tracker,
+    ) {}
 
-  public function handle(Request $request, Closure $next): Response
-  {
-    $response = $next($request);
+    public function handle(Request $request, Closure $next): Response
+    {
+        $response = $next($request);
 
-    if (
-      $request->isMethod('GET')
-      && $response->isSuccessful()
-    ) {
-      $this->tracker->record($request);
+        if (
+            $request->isMethod('GET')
+            && $response->isSuccessful()
+        ) {
+            $this->tracker->record($request);
+        }
+
+        return $response;
     }
-
-    return $response;
-  }
 }
