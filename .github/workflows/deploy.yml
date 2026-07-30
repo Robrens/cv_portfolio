@@ -428,6 +428,28 @@ jobs:
           php artisan migrate --force
           php artisan optimize
 
+          find bootstrap/cache \
+            -mindepth 1 \
+            -exec chgrp www-data {} +
+
+          find bootstrap/cache \
+            -type d \
+            -exec chmod 2770 {} +
+
+          find bootstrap/cache \
+            -type f \
+            -exec chmod 0640 {} +
+
+          ln -s \
+            "$release_path" \
+            "$next_link"
+
+          mv -Tf \
+            "$next_link" \
+            "$current_link"
+
+          sudo -n systemctl reload php8.4-fpm
+
           rm -f -- "$next_link"
 
           ln -s \
