@@ -440,18 +440,42 @@ jobs:
 
           sudo -n systemctl reload php8.4-fpm
 
-          if ! curl \
-            --fail \
-            --silent \
-            --show-error \
-            --location \
-            --retry 3 \
-            --retry-delay 2 \
-            --max-time 15 \
-            "$healthcheck_url" \
-            >/dev/null; then
+          healthcheck_body="$(mktemp)"
+          healthcheck_headers="$(mktemp)"
 
-            echo "Health check failed." >&2
+          http_code="$(
+            curl \
+              --silent \
+              --show-error \
+              --location \
+              --output "$healthcheck_body" \
+              --dump-header "$healthcheck_headers" \
+              --write-out '%{http_code}' \
+              --retry 3 \
+              --retry-delay 2 \
+              --max-time 15 \
+              "$healthcheck_url" ||
+            true
+          )"
+
+          echo "Health check HTTP status: ${http_code}"
+          sed -n '1,30p' "$healthcheck_headers"
+
+          if [[ "$http_code" != "200" ]]; then
+            echo "Health check failed with HTTP ${http_code}." >&2
+
+            echo "Release active during health check:"
+            readlink -f "$current_link" || true
+
+            echo "Recent Laravel log:"
+            tail -n 100 \
+              "${shared_storage}/logs/laravel.log" ||
+              true
+
+            echo "Response body:"
+            sed -n '1,80p' "$healthcheck_body" || true
+
+            rm -f -- "$healthcheck_body" "$healthcheck_headers"
 
             if [[ -n "$previous_release" ]] &&
               [[ -d "$previous_release" ]]; then
@@ -471,6 +495,8 @@ jobs:
 
             exit 1
           fi
+
+          rm -f -- "$healthcheck_body" "$healthcheck_headers" 1
 
           trap - ERR
 
