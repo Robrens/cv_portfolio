@@ -189,8 +189,6 @@ jobs:
             storage/framework/views \
             bootstrap/cache
 
-          php artisan key:generate
-
       - name: Validate Composer files
         run: composer validate --strict
 
