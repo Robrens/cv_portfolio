@@ -243,3 +243,16 @@ jobs:
 
       - name: Audit JavaScript dependencies
         run: yarn npm audit --all --recursive --severity high
+
+  deploy:
+    name: Deploy production
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/master'
+    needs:
+      - backend
+      - frontend
+      - master-security
+    permissions:
+      contents: read
+    uses: ./.github/workflows/deploy.yml
