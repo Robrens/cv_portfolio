@@ -14,8 +14,9 @@ jobs:
   deploy:
     name: Deploy to production
     runs-on: ubuntu-latest
-    environment: Production
-    timeout-minutes: 20
+    environment:
+      name: Production
+    timeout-minutes: 10
 
     env:
       COMMIT_SHA: ${{ github.sha }}
