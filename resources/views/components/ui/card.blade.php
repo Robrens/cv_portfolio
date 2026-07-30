@@ -7,7 +7,7 @@
   </div>
   @endif
 
-  <div class="mt-4 gap-y-2">
+  <div class="card-head mt-4 gap-y-2">
     <h3 class="section-title">{{ $title }}</h3>
     <p class="font-semibold">{{ $subtitle }}</p>
   </div>

@@ -1,0 +1,447 @@
+name: Deploy production
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to production
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'master'
+    runs-on: ubuntu-latest
+    environment: Production
+    timeout-minutes: 20
+
+    env:
+      COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      HEALTHCHECK_URL: ${{ vars.HEALTHCHECK_URL }}
+
+    steps:
+      - name: Check deployment configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_values=(
+            COMMIT_SHA
+            SSH_HOST
+            SSH_PORT
+            SSH_USER
+            SSH_PRIVATE_KEY
+            SSH_KNOWN_HOSTS
+            DEPLOY_PATH
+            HEALTHCHECK_URL
+          )
+
+          for variable in "${required_values[@]}"; do
+            if [[ -z "${!variable:-}" ]]; then
+              echo "::error::Missing required deployment value: ${variable}"
+              exit 1
+            fi
+          done
+
+          if [[ ! "$COMMIT_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Invalid commit SHA."
+            exit 1
+          fi
+
+          if [[ ! "$SSH_PORT" =~ ^[0-9]{1,5}$ ]]; then
+            echo "::error::Invalid SSH port."
+            exit 1
+          fi
+
+          if (( SSH_PORT < 1 || SSH_PORT > 65535 )); then
+            echo "::error::SSH port is outside the valid range."
+            exit 1
+          fi
+
+          if [[ ! "$DEPLOY_PATH" =~ ^/var/www/[a-zA-Z0-9._-]+$ ]]; then
+            echo "::error::Invalid deployment path."
+            exit 1
+          fi
+
+          if [[ "$HEALTHCHECK_URL" != https://* ]]; then
+            echo "::error::HEALTHCHECK_URL must use HTTPS."
+            exit 1
+          fi
+
+      - name: Checkout validated commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, gd, fileinfo
+          coverage: none
+          tools: composer:v2
+
+      - name: Prepare Laravel build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cp .env.example .env
+
+          php -r '
+          $path = ".env";
+          $contents = file_get_contents($path);
+
+          $contents = preg_replace(
+              "/^APP_ENV=.*/m",
+              "APP_ENV=production",
+              $contents
+          );
+
+          $contents = preg_replace(
+              "/^APP_DEBUG=.*/m",
+              "APP_DEBUG=false",
+              $contents
+          );
+
+          file_put_contents($path, $contents);
+          '
+
+          mkdir -p \
+            storage/framework/cache/data \
+            storage/framework/sessions \
+            storage/framework/views \
+            bootstrap/cache
+
+          php artisan key:generate
+
+      - name: Validate Composer files
+        run: composer validate --strict
+
+      - name: Install production PHP dependencies
+        run: >-
+          composer install
+          --no-dev
+          --no-interaction
+          --prefer-dist
+          --no-progress
+          --optimize-autoloader
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.18'
+          cache: yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install --immutable
+
+      - name: Build production assets
+        run: yarn build
+
+      - name: Remove build-only data
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -f .env
+          rm -rf node_modules
+
+      - name: Create release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          archive="/tmp/cv-portfolio-${COMMIT_SHA}.tar.gz"
+
+          tar \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.env' \
+            --exclude='tests' \
+            --exclude='node_modules' \
+            --exclude='storage/app/*' \
+            --exclude='storage/framework/cache/*' \
+            --exclude='storage/framework/sessions/*' \
+            --exclude='storage/framework/views/*' \
+            --exclude='storage/logs/*' \
+            -czf "$archive" \
+            .
+
+      - name: Configure SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+
+          install -m 700 -d "$HOME/.ssh"
+
+          printf '%s\n' "$SSH_PRIVATE_KEY" \
+            > "$HOME/.ssh/deploy_key"
+
+          printf '%s\n' "$SSH_KNOWN_HOSTS" \
+            > "$HOME/.ssh/known_hosts"
+
+          chmod 600 \
+            "$HOME/.ssh/deploy_key" \
+            "$HOME/.ssh/known_hosts"
+
+      - name: Test SSH connection
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ssh \
+            -p "$SSH_PORT" \
+            -i "$HOME/.ssh/deploy_key" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            -o ConnectTimeout=10 \
+            "${SSH_USER}@${SSH_HOST}" \
+            true
+
+      - name: Upload release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          archive="/tmp/cv-portfolio-${COMMIT_SHA}.tar.gz"
+
+          scp \
+            -P "$SSH_PORT" \
+            -i "$HOME/.ssh/deploy_key" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            "$archive" \
+            "${SSH_USER}@${SSH_HOST}:/tmp/cv-portfolio-${COMMIT_SHA}.tar.gz"
+
+      - name: Activate release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ssh \
+            -p "$SSH_PORT" \
+            -i "$HOME/.ssh/deploy_key" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            "${SSH_USER}@${SSH_HOST}" \
+            bash -s -- \
+              "$DEPLOY_PATH" \
+              "$COMMIT_SHA" \
+              "$HEALTHCHECK_URL" <<'REMOTE_SCRIPT'
+          set -euo pipefail
+          umask 027
+
+          deploy_path="$1"
+          commit_sha="$2"
+          healthcheck_url="$3"
+
+          archive="/tmp/cv-portfolio-${commit_sha}.tar.gz"
+          releases_path="${deploy_path}/releases"
+          release_path="${releases_path}/${commit_sha}"
+          current_link="${deploy_path}/current"
+          next_link="${deploy_path}/current.next"
+          shared_env="${deploy_path}/shared/.env"
+          shared_storage="${deploy_path}/shared/storage"
+
+          cleanup_failed_release() {
+            rm -f -- "$archive"
+            rm -f -- "$next_link"
+
+            if [[ -d "$release_path" ]]; then
+              rm -rf -- "$release_path"
+            fi
+          }
+
+          if [[ ! "$commit_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Invalid commit SHA." >&2
+            exit 1
+          fi
+
+          if [[ ! "$deploy_path" =~ ^/var/www/[a-zA-Z0-9._-]+$ ]]; then
+            echo "Invalid deployment path." >&2
+            exit 1
+          fi
+
+          if [[ "$healthcheck_url" != https://* ]]; then
+            echo "Invalid health-check URL." >&2
+            exit 1
+          fi
+
+          if [[ ! -f "$archive" ]]; then
+            echo "Release archive not found." >&2
+            exit 1
+          fi
+
+          if [[ ! -f "$shared_env" ]]; then
+            echo "Production .env not found." >&2
+            cleanup_failed_release
+            exit 1
+          fi
+
+          if [[ ! -d "$shared_storage" ]]; then
+            echo "Shared storage not found." >&2
+            cleanup_failed_release
+            exit 1
+          fi
+
+          if [[ -e "$release_path" ]]; then
+            echo "Release already exists." >&2
+            rm -f -- "$archive"
+            exit 1
+          fi
+
+          previous_release=""
+
+          if [[ -L "$current_link" ]]; then
+            previous_release="$(readlink -f "$current_link")"
+          fi
+
+          mkdir -p "$releases_path"
+          mkdir "$release_path"
+
+          trap cleanup_failed_release ERR
+
+          tar \
+            --extract \
+            --gzip \
+            --file="$archive" \
+            --directory="$release_path" \
+            --no-same-owner \
+            --no-same-permissions
+
+          rm -f -- "$archive"
+
+          rm -rf -- "$release_path/storage"
+
+          ln -s \
+            "$shared_storage" \
+            "$release_path/storage"
+
+          ln -s \
+            "$shared_env" \
+            "$release_path/.env"
+
+          mkdir -p "$release_path/bootstrap/cache"
+
+          find "$release_path" \
+            -type d \
+            -exec chmod 750 {} +
+
+          find "$release_path" \
+            -type f \
+            -exec chmod 640 {} +
+
+          chmod 2770 "$release_path/bootstrap/cache"
+
+          cd "$release_path"
+
+          php artisan storage:link
+          php artisan migrate --force
+          php artisan optimize
+
+          rm -f -- "$next_link"
+
+          ln -s \
+            "$release_path" \
+            "$next_link"
+
+          mv -Tf \
+            "$next_link" \
+            "$current_link"
+
+          sudo -n systemctl reload php8.4-fpm
+
+          if ! curl \
+            --fail \
+            --silent \
+            --show-error \
+            --location \
+            --retry 3 \
+            --retry-delay 2 \
+            --max-time 15 \
+            "$healthcheck_url" \
+            >/dev/null; then
+
+            echo "Health check failed." >&2
+
+            if [[ -n "$previous_release" ]] &&
+              [[ -d "$previous_release" ]]; then
+
+              rm -f -- "$next_link"
+
+              ln -s \
+                "$previous_release" \
+                "$next_link"
+
+              mv -Tf \
+                "$next_link" \
+                "$current_link"
+
+              sudo -n systemctl reload php8.4-fpm
+            fi
+
+            exit 1
+          fi
+
+          trap - ERR
+
+          mapfile -t obsolete_releases < <(
+            find "$releases_path" \
+              -mindepth 1 \
+              -maxdepth 1 \
+              -type d \
+              -printf '%T@ %p\n' |
+              sort -rn |
+              tail -n +6 |
+              cut -d' ' -f2-
+          )
+
+          for obsolete_release in "${obsolete_releases[@]}"; do
+            if [[ "$obsolete_release" == "$releases_path/"* ]] &&
+              [[ "$obsolete_release" != "$previous_release" ]] &&
+              [[ "$obsolete_release" != "$release_path" ]]; then
+
+              rm -rf -- "$obsolete_release"
+            fi
+          done
+
+          echo "Deployment completed."
+          REMOTE_SCRIPT
+
+      - name: Remove sensitive temporary files
+        if: always()
+        shell: bash
+        run: |
+          rm -f "$HOME/.ssh/deploy_key"
+          rm -f "$HOME/.ssh/known_hosts"
+          rm -f "/tmp/cv-portfolio-${COMMIT_SHA}.tar.gz"
