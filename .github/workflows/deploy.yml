@@ -30,10 +30,8 @@ jobs:
           set -euo pipefail
 
           api_url="https://api.github.com/repos/${REPOSITORY}/actions/workflows/ci.yml/runs"
-          max_attempts=60
-          delay_seconds=10
 
-          for ((attempt = 1; attempt <= max_attempts; attempt++)); do
+          for ((attempt = 1; attempt <= 60; attempt++)); do
             response="$(
               curl \
                 --fail \
@@ -45,21 +43,13 @@ jobs:
                 "${api_url}?head_sha=${COMMIT_SHA}&event=push&per_page=1"
             )"
 
-            status="$(
-              jq -r '.workflow_runs[0].status // "not_found"' \
-                <<< "$response"
-            )"
-
-            conclusion="$(
-              jq -r '.workflow_runs[0].conclusion // "pending"' \
-                <<< "$response"
-            )"
+            status="$(jq -r '.workflow_runs[0].status // "not_found"' <<< "$response")"
+            conclusion="$(jq -r '.workflow_runs[0].conclusion // "pending"' <<< "$response")"
 
             echo "CI status: ${status}; conclusion: ${conclusion}"
 
             if [[ "$status" == "completed" ]]; then
               if [[ "$conclusion" == "success" ]]; then
-                echo "CI succeeded for commit ${COMMIT_SHA}."
                 exit 0
               fi
 
@@ -67,7 +57,7 @@ jobs:
               exit 1
             fi
 
-            sleep "$delay_seconds"
+            sleep 10
           done
 
           echo "::error::CI did not complete within the allowed time."
@@ -125,13 +115,14 @@ jobs:
             exit 1
           fi
 
-          if [[ ! "$SSH_PORT" =~ ^[0-9]{1,5}$ ]]; then
-            echo "::error::Invalid SSH port."
+          if [[ ! "$SSH_HOST" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+            echo "::error::SSH_HOST must contain only the public IPv4 address."
             exit 1
           fi
 
-          if (( SSH_PORT < 1 || SSH_PORT > 65535 )); then
-            echo "::error::SSH port is outside the valid range."
+          if [[ ! "$SSH_PORT" =~ ^[0-9]{1,5}$ ]] ||
+            (( SSH_PORT < 1 || SSH_PORT > 65535 )); then
+            echo "::error::Invalid SSH port."
             exit 1
           fi
 
@@ -169,19 +160,8 @@ jobs:
           php -r '
           $path = ".env";
           $contents = file_get_contents($path);
-
-          $contents = preg_replace(
-              "/^APP_ENV=.*/m",
-              "APP_ENV=production",
-              $contents
-          );
-
-          $contents = preg_replace(
-              "/^APP_DEBUG=.*/m",
-              "APP_DEBUG=false",
-              $contents
-          );
-
+          $contents = preg_replace("/^APP_ENV=.*/m", "APP_ENV=production", $contents);
+          $contents = preg_replace("/^APP_DEBUG=.*/m", "APP_DEBUG=false", $contents);
           file_put_contents($path, $contents);
           '
 
@@ -222,7 +202,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           rm -f .env
           rm -rf node_modules
 
@@ -254,12 +233,8 @@ jobs:
           umask 077
 
           install -m 700 -d "$HOME/.ssh"
-
-          printf '%s\n' "$SSH_PRIVATE_KEY" \
-            > "$HOME/.ssh/deploy_key"
-
-          printf '%s\n' "$SSH_KNOWN_HOSTS" \
-            > "$HOME/.ssh/known_hosts"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/deploy_key"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
 
           chmod 600 \
             "$HOME/.ssh/deploy_key" \
@@ -316,8 +291,8 @@ jobs:
               "$COMMIT_SHA" \
               "$RELEASE_ID" \
               "$HEALTHCHECK_URL" <<'REMOTE_SCRIPT'
-          set -euo pipefail
-          umask 027
+          set -Eeuo pipefail
+          umask 0027
 
           deploy_path="$1"
           commit_sha="$2"
@@ -332,9 +307,8 @@ jobs:
           shared_env="${deploy_path}/shared/.env"
           shared_storage="${deploy_path}/shared/storage"
 
-          cleanup_failed_release() {
-            rm -f -- "$archive"
-            rm -f -- "$next_link"
+          cleanup_preparation() {
+            rm -f -- "$archive" "$next_link"
 
             if [[ -d "$release_path" ]]; then
               rm -rf -- "$release_path"
@@ -363,13 +337,13 @@ jobs:
 
           if [[ ! -f "$shared_env" ]]; then
             echo "Production .env not found." >&2
-            cleanup_failed_release
+            rm -f -- "$archive"
             exit 1
           fi
 
           if [[ ! -d "$shared_storage" ]]; then
             echo "Shared storage not found." >&2
-            cleanup_failed_release
+            rm -f -- "$archive"
             exit 1
           fi
 
@@ -388,7 +362,7 @@ jobs:
           mkdir -p "$releases_path"
           mkdir "$release_path"
 
-          trap cleanup_failed_release ERR
+          trap cleanup_preparation ERR
 
           tar \
             --extract \
@@ -399,28 +373,10 @@ jobs:
             --no-same-permissions
 
           rm -f -- "$archive"
-
           rm -rf -- "$release_path/storage"
 
-          ln -s \
-            "$shared_storage" \
-            "$release_path/storage"
-
-          ln -s \
-            "$shared_env" \
-            "$release_path/.env"
-
-          mkdir -p "$release_path/bootstrap/cache"
-
-          find "$release_path" \
-            -type d \
-            -exec chmod 750 {} +
-
-          find "$release_path" \
-            -type f \
-            -exec chmod 640 {} +
-
-          chmod 2770 "$release_path/bootstrap/cache"
+          ln -s "$shared_storage" "$release_path/storage"
+          ln -s "$shared_env" "$release_path/.env"
 
           cd "$release_path"
 
@@ -428,42 +384,14 @@ jobs:
           php artisan migrate --force
           php artisan optimize
 
-          find bootstrap/cache \
-            -mindepth 1 \
-            -exec chgrp www-data {} +
+          trap - ERR
 
-          find bootstrap/cache \
-            -type d \
-            -exec chmod 2770 {} +
-
-          find bootstrap/cache \
-            -type f \
-            -exec chmod 0640 {} +
-
-          ln -s \
-            "$release_path" \
-            "$next_link"
-
-          mv -Tf \
-            "$next_link" \
-            "$current_link"
-
-          sudo -n systemctl reload php8.4-fpm
-
-          rm -f -- "$next_link"
-
-          ln -s \
-            "$release_path" \
-            "$next_link"
-
-          mv -Tf \
-            "$next_link" \
-            "$current_link"
+          ln -s "$release_path" "$next_link"
+          mv -Tf "$next_link" "$current_link"
 
           sudo -n systemctl reload php8.4-fpm
 
           healthcheck_body="$(mktemp)"
-          healthcheck_headers="$(mktemp)"
 
           http_code="$(
             curl \
@@ -471,7 +399,6 @@ jobs:
               --show-error \
               --location \
               --output "$healthcheck_body" \
-              --dump-header "$healthcheck_headers" \
               --write-out '%{http_code}' \
               --retry 3 \
               --retry-delay 2 \
@@ -481,69 +408,26 @@ jobs:
           )"
 
           echo "Health check HTTP status: ${http_code}"
-          sed -n '1,30p' "$healthcheck_headers"
 
           if [[ "$http_code" != "200" ]]; then
             echo "Health check failed with HTTP ${http_code}." >&2
-
-            echo "Release active during health check:"
-            readlink -f "$current_link" || true
-
-            echo "Recent Laravel log:"
-            tail -n 100 \
-              "${shared_storage}/logs/laravel.log" ||
-              true
-
-            echo "Recent PHP-FPM log:"
-            sudo -n journalctl \
-              -u php8.4-fpm \
-              --since "5 minutes ago" \
-              --no-pager ||
-              true
-
-            echo "Recent Nginx error log:"
-            sudo -n tail -n 100 \
-              /var/log/nginx/error.log ||
-              true
-
-            echo "Release environment checks:"
-            ls -la \
-              "$current_link/.env" \
-              "$current_link/vendor/autoload.php" \
-              "$current_link/bootstrap/cache" ||
-              true
-
-            echo "Resolved release paths:"
-            readlink -f "$current_link/.env" || true
-            readlink -f "$current_link/vendor/autoload.php" || true
-
-            echo "Response body:"
-            sed -n '1,80p' "$healthcheck_body" || true
-
-            rm -f -- "$healthcheck_body" "$healthcheck_headers"
+            rm -f -- "$healthcheck_body"
 
             if [[ -n "$previous_release" ]] &&
               [[ -d "$previous_release" ]]; then
 
               rm -f -- "$next_link"
-
-              ln -s \
-                "$previous_release" \
-                "$next_link"
-
-              mv -Tf \
-                "$next_link" \
-                "$current_link"
+              ln -s "$previous_release" "$next_link"
+              mv -Tf "$next_link" "$current_link"
 
               sudo -n systemctl reload php8.4-fpm
+              rm -rf -- "$release_path"
             fi
 
             exit 1
           fi
 
-          rm -f -- "$healthcheck_body" "$healthcheck_headers" 1
-
-          trap - ERR
+          rm -f -- "$healthcheck_body"
 
           mapfile -t obsolete_releases < <(
             find "$releases_path" \
