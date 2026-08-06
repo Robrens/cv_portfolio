@@ -36,7 +36,7 @@
     
     <script type="application/ld+json">
       {!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'Person',
             'name' => $profile->first_name.' '.$profile->last_name,
             'url' => route('home'),
